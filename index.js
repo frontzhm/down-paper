@@ -168,65 +168,80 @@ async function run() {
     // 等待打印弹框出现
     await new Promise(resolve => setTimeout(resolve, 5000));
     
-    // 选择目标打印机为"另存为PDF"
-    console.log('正在选择目标打印机为"另存为PDF"...');
+    // 监听浏览器对话框事件
+    console.log('正在监听浏览器对话框事件...');
     
-    // 使用Tab键导航到目标打印机
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await new Promise(resolve => setTimeout(resolve, 500));
-
+    // 设置打印模式检测标志
+    let isPrintMode = false;
     
+    // 监听页面对话框事件
+    page.on('dialog', async (dialog) => {
+      console.log('检测到对话框:', dialog.type(), dialog.message());
+      if (dialog.type() === 'beforeprint' || dialog.message().includes('print')) {
+        isPrintMode = true;
+        console.log('✅ 检测到打印模式');
+      }
+      await dialog.accept();
+    });
     
-    // 按向下箭头键选择"另存为PDF"选项
-    // 通常"另存为PDF"是第一个选项，所以直接按回车
-    await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('ArrowDown');
-    console.log('✅ 已选择"另存为PDF"');
+    // 监听打印事件
+    await page.evaluateOnNewDocument(() => {
+      window.addEventListener('beforeprint', () => {
+        console.log('打印预览即将显示');
+        window.isPrintMode = true;
+      });
+      window.addEventListener('afterprint', () => {
+        console.log('打印预览已关闭');
+        window.isPrintMode = false;
+      });
+    });
     
-    // 等待设置生效
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // 检查是否处于打印模式
+    const printStatus = await page.evaluate(() => {
+      return {
+        isPrintMode: window.isPrintMode || false,
+        hasPrintFunction: typeof window.print === 'function',
+        printMediaQuery: window.matchMedia ? window.matchMedia('print').matches : false
+      };
+    });
     
-    // 点击保存按钮
-    console.log('正在点击保存按钮...');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
+    console.log('打印状态检查:', printStatus);
     
-  
-    // 按回车键点击保存按钮
-    await page.keyboard.press('Enter');
-    console.log('✅ 已点击保存按钮');
+    if (printStatus.isPrintMode || printStatus.printMediaQuery) {
+      console.log('✅ 确认处于打印模式，开始选择第二项打印机...');
+      
+      // 使用Tab键导航到打印机选择区域
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Tab');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 选择第二项打印机（按一次下箭头键）
+      await page.keyboard.press('ArrowDown');
+      console.log('✅ 已选择第二项打印机');
+      
+      // 等待5秒
+      console.log('等待5秒后触发保存...');
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // 触发保存
+      console.log('正在触发保存...');
+      
+      // 使用Tab键导航到保存按钮
+      for (let i = 0; i < 6; i++) {
+        await page.keyboard.press('Tab');
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      
+      // 按回车键点击保存按钮
+      await page.keyboard.press('Enter');
+      console.log('✅ 已触发保存');
+      
+    } else {
+      console.log('⚠️ 未检测到打印模式，跳过打印机选择');
+    }
     
-    // 等待文件保存对话框出现
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // 在文件保存对话框中输入文件名
-    console.log('正在输入文件名:', fileName);
-    
-    // 清空当前文件名并输入新文件名
-    await page.keyboard.down('Meta');
-    await page.keyboard.press('a');
-    await page.keyboard.up('Meta');
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // 输入文件名
-    await page.type(fileName);
-    console.log('✅ 已输入文件名');
-    
-    // 按回车键确认保存
-    await page.keyboard.press('Enter');
-    console.log('✅ 已确认保存文件');
-    
-    // 等待文件保存完成
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    // 重命名下载的文件
     
   } catch (error) {
     console.log('❌ iframe内下载按钮未找到:', error.message);
