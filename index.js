@@ -160,7 +160,8 @@ async function run() {
       console.log('✅ 已创建download文件夹:', downloadPath);
     }
     
-    await page._client.send('Page.setDownloadBehavior', {
+    const client = await page.target().createCDPSession();
+    await client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath: downloadPath
     });
@@ -183,9 +184,15 @@ async function run() {
     
     // 使用键盘快捷键 Ctrl+S 或 Cmd+S 保存
     const isMac = process.platform === 'darwin';
-    const saveKey = isMac ? 'Meta+s' : 'Control+s';
-    await page.keyboard.down(saveKey);
-    await page.keyboard.up(saveKey);
+    if (isMac) {
+      await page.keyboard.down('Meta');
+      await page.keyboard.press('s');
+      await page.keyboard.up('Meta');
+    } else {
+      await page.keyboard.down('Control');
+      await page.keyboard.press('s');
+      await page.keyboard.up('Control');
+    }
     console.log('已触发保存快捷键');
     
     // 等待下载完成
