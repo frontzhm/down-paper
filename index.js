@@ -109,23 +109,40 @@ async function run() {
     console.log('❌ 按钮未找到:', error.message);
   }
 
-  // 等待下载按钮出现
-  console.log('正在等待下载按钮出现...');
+  // 等待下载按钮出现（在iframe内）
+  console.log('正在等待iframe内的下载按钮出现...');
   const printSelector = '.down-info .down-info-btn .print-btn'
+  console.log('查找的选择器:', printSelector);
+  
   try {
-    // 等待按钮出现，一旦出现立即继续（最多等待60秒）
-    await page.waitForSelector(printSelector, { timeout: 60*1000 });
-    console.log('✅ 下载按钮已找到！');
+    // 获取iframe
+    const iframe = await page.$('iframe');
+    if (!iframe) {
+      throw new Error('未找到iframe');
+    }
+    
+    const frame = await iframe.contentFrame();
+    if (!frame) {
+      throw new Error('无法获取iframe内容框架');
+    }
+    
+    console.log('✅ 已获取iframe内容框架');
+    
+    // 在iframe内等待按钮出现
+    await frame.waitForSelector(printSelector, { timeout: 60*1000 });
+    console.log('✅ iframe内下载按钮已找到！');
     
     // 打印下载按钮信息
-    const downloadButton = await page.$(printSelector);
-    const buttonText = await page.evaluate(el => el.textContent, downloadButton);
+    const downloadButton = await frame.$(printSelector);
+    const buttonText = await frame.evaluate(el => el.textContent, downloadButton);
     console.log('下载按钮文本:', buttonText);
     
-    await page.click(printSelector);
-    console.log('✅ 下载按钮已点击！');
+    // 在iframe内点击按钮
+    await frame.click(printSelector);
+    console.log('✅ iframe内下载按钮已点击！');
+    
   } catch (error) {
-    console.log('❌ 下载按钮未找到:', error.message);
+    console.log('❌ iframe内下载按钮未找到:', error.message);
   }
 
   // 关闭浏览器
