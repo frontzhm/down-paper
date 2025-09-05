@@ -7,12 +7,32 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: false, // 先使用非无头模式进行调试
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: [
+      '--no-sandbox', 
+      '--disable-setuid-sandbox',
+      '--window-size=2800,1200',
+      '--start-maximized'
+    ]
   });
   const page = await browser.newPage();
   
   // 设置窗口大小
-  await page.setViewport({ width: 2500, height: 1200 });
+  await page.setViewport({ width: 1500, height: 1200 });
+  
+  // 检查实际窗口大小
+  const viewport = await page.viewport();
+  console.log('设置的视口大小:', viewport);
+  
+  // 获取实际窗口大小
+  const windowSize = await page.evaluate(() => {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      screenWidth: window.screen.width,
+      screenHeight: window.screen.height
+    };
+  });
+  console.log('实际窗口大小:', windowSize);
 
   // 设置cookie
   const cookies = [
@@ -36,7 +56,43 @@ async function run() {
   await page.goto('https://iteach-cloudwps.xdf.cn/paperEditor?paperId=77d3642015c549e8b393e83008285f0a&questionBankHubPaperId=CL2ffcf14ad3984eab801a695dfc80dde7&updateTime=2025-09-05%2B14%3A17%3A11&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E8%8B%8F%E6%95%99%E7%89%88-4%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit');
 
   // 等待页面加载完成
-  await page.waitForTimeout(120000); // 2分钟
+  await page.waitForTimeout(30*1000); // 30秒
+  
+  // 检查iframe是否加载完成
+  console.log('正在检查iframe加载状态...');
+  try {
+    // 等待iframe出现
+    await page.waitForSelector('iframe', { timeout: 10000 });
+    console.log('✅ iframe已找到');
+    
+    // 获取iframe元素
+    const iframe = await page.$('iframe');
+    const frame = await iframe.contentFrame();
+    
+    if (frame) {
+      console.log('✅ iframe内容框架已获取');
+      
+      // 等待iframe内容加载完成
+      try {
+        await frame.waitForSelector('body', { timeout: 30000 });
+        console.log('✅ iframe内容加载完成');
+        
+        // 等待iframe内的网络请求完成
+        await frame.waitForFunction(() => {
+          return document.readyState === 'complete';
+        }, { timeout: 30000 });
+        console.log('✅ iframe文档状态完成');
+        
+      } catch (frameError) {
+        console.log('❌ iframe内容加载超时:', frameError.message);
+      }
+      
+    } else {
+      console.log('❌ 无法获取iframe内容框架');
+    }
+  } catch (error) {
+    console.log('❌ iframe检查失败:', error.message);
+  }
 
   // 尝试多种可能的选择器
   
@@ -45,7 +101,7 @@ async function run() {
   // 等待按钮存在后再点击
   console.log('正在等待按钮出现...');
   try {
-    await page.waitForSelector(downloadSelector, { timeout: 3000000 });
+    await page.waitForSelector(downloadSelector, { timeout: 30*1000 });
     console.log('✅ 按钮已找到！');
     await page.click(downloadSelector);
     console.log('✅ 按钮已点击！');
@@ -57,7 +113,8 @@ async function run() {
   console.log('正在等待下载按钮出现...');
   const printSelector = '.down-info .down-info-btn .print-btn'
   try {
-    await page.waitForSelector(printSelector, { timeout: 30000000 });
+    // 等待按钮出现，一旦出现立即继续（最多等待60秒）
+    await page.waitForSelector(printSelector, { timeout: 60*1000 });
     console.log('✅ 下载按钮已找到！');
     
     // 打印下载按钮信息
