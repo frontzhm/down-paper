@@ -56,7 +56,7 @@ async function run() {
   await page.goto('https://iteach-cloudwps.xdf.cn/paperEditor?paperId=77d3642015c549e8b393e83008285f0a&questionBankHubPaperId=CL2ffcf14ad3984eab801a695dfc80dde7&updateTime=2025-09-05%2B14%3A17%3A11&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E8%8B%8F%E6%95%99%E7%89%88-4%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit');
 
   // 等待页面加载完成
-  await page.waitForTimeout(30*1000); // 30秒
+  await new Promise(resolve => setTimeout(resolve, 30*1000)); // 30秒
   
   // 检查iframe是否加载完成
   console.log('正在检查iframe加载状态...');
@@ -140,11 +140,6 @@ async function run() {
     // 在iframe内点击按钮
     await frame.click(printSelector);
     console.log('✅ iframe内下载按钮已点击！');
-    
-    // 等待打印弹框出现并处理
-    console.log('等待打印弹框出现...');
-    await page.waitForTimeout(2000); // 等待弹框出现
-    
     // 获取当前URL中的name参数作为文件名
     const currentUrl = page.url();
     const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
@@ -160,80 +155,85 @@ async function run() {
       console.log('✅ 已创建download文件夹:', downloadPath);
     }
     
-    const client = await page.target().createCDPSession();
-    await client.send('Page.setDownloadBehavior', {
-      behavior: 'allow',
-      downloadPath: downloadPath
-    });
-    console.log('✅ 下载路径已设置为:', downloadPath);
+    // 等待并检测浏览器打印弹框是否出现
+    console.log('等待浏览器打印弹框出现...');
     
-    // 处理打印弹框 - 点击保存按钮
-    console.log('正在处理打印弹框...');
+    // 使用Command+P调起浏览器打印弹框
+    console.log('正在调起浏览器打印弹框...');
+    await page.keyboard.down('Meta');
+    await page.keyboard.press('p');
+    await page.keyboard.up('Meta');
+    console.log('✅ 已按下Command+P调起打印弹框');
     
-    // 等待打印对话框出现
-    const printDialogPromise = new Promise((resolve) => {
-      page.on('dialog', async (dialog) => {
-        console.log('检测到对话框:', dialog.message());
-        await dialog.accept();
-        resolve();
-      });
-    });
+    // 等待打印弹框出现
+    await new Promise(resolve => setTimeout(resolve, 5000));
     
-    // 如果打印对话框没有自动出现，尝试通过键盘快捷键触发保存
-    await page.waitForTimeout(1000);
+    // 选择目标打印机为"另存为PDF"
+    console.log('正在选择目标打印机为"另存为PDF"...');
     
-    // 使用键盘快捷键 Ctrl+S 或 Cmd+S 保存
-    const isMac = process.platform === 'darwin';
-    if (isMac) {
-      await page.keyboard.down('Meta');
-      await page.keyboard.press('s');
-      await page.keyboard.up('Meta');
-    } else {
-      await page.keyboard.down('Control');
-      await page.keyboard.press('s');
-      await page.keyboard.up('Control');
-    }
-    console.log('已触发保存快捷键');
+    // 使用Tab键导航到目标打印机
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     
-    // 等待下载完成
-    console.log('等待文件下载完成...');
-    await page.waitForTimeout(5000);
+    
+    // 按向下箭头键选择"另存为PDF"选项
+    // 通常"另存为PDF"是第一个选项，所以直接按回车
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    console.log('✅ 已选择"另存为PDF"');
+    
+    // 等待设置生效
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    // 点击保存按钮
+    console.log('正在点击保存按钮...');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    
+  
+    // 按回车键点击保存按钮
+    await page.keyboard.press('Enter');
+    console.log('✅ 已点击保存按钮');
+    
+    // 等待文件保存对话框出现
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // 在文件保存对话框中输入文件名
+    console.log('正在输入文件名:', fileName);
+    
+    // 清空当前文件名并输入新文件名
+    await page.keyboard.down('Meta');
+    await page.keyboard.press('a');
+    await page.keyboard.up('Meta');
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // 输入文件名
+    await page.type(fileName);
+    console.log('✅ 已输入文件名');
+    
+    // 按回车键确认保存
+    await page.keyboard.press('Enter');
+    console.log('✅ 已确认保存文件');
+    
+    // 等待文件保存完成
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     // 重命名下载的文件
-    try {
-      const files = fs.readdirSync(downloadPath);
-      const pdfFiles = files.filter(file => file.endsWith('.pdf'));
-      const recentFile = pdfFiles
-        .map(file => ({
-          name: file,
-          time: fs.statSync(path.join(downloadPath, file)).mtime
-        }))
-        .sort((a, b) => b.time - a.time)[0];
-
-      if (recentFile) {
-        const oldPath = path.join(downloadPath, recentFile.name);
-        const newPath = path.join(downloadPath, `${fileName}.pdf`);
-        
-        // 如果目标文件已存在，先删除
-        if (fs.existsSync(newPath)) {
-          fs.unlinkSync(newPath);
-        }
-        
-        fs.renameSync(oldPath, newPath);
-        console.log(`✅ 文件已重命名为: ${newPath}`);
-      } else {
-        console.log('❌ 未找到下载的PDF文件');
-      }
-    } catch (renameError) {
-      console.error('❌ 重命名文件时出错:', renameError.message);
-    }
     
   } catch (error) {
     console.log('❌ iframe内下载按钮未找到:', error.message);
   }
 
   // 关闭浏览器
-  await browser.close();
+  // await browser.close();
 }
 
 run();
