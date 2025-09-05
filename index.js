@@ -141,6 +141,86 @@ async function run() {
     await frame.click(printSelector);
     console.log('✅ iframe内下载按钮已点击！');
     
+    // 等待打印弹框出现并处理
+    console.log('等待打印弹框出现...');
+    await page.waitForTimeout(2000); // 等待弹框出现
+    
+    // 获取当前URL中的name参数作为文件名
+    const currentUrl = page.url();
+    const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
+    const fileName = urlParams.get('name') || '试卷';
+    console.log('提取的文件名:', fileName);
+    
+    // 设置下载路径到当前项目目录的download文件夹
+    const downloadPath = path.join(__dirname, 'download');
+    
+    // 确保download文件夹存在
+    if (!fs.existsSync(downloadPath)) {
+      fs.mkdirSync(downloadPath, { recursive: true });
+      console.log('✅ 已创建download文件夹:', downloadPath);
+    }
+    
+    await page._client.send('Page.setDownloadBehavior', {
+      behavior: 'allow',
+      downloadPath: downloadPath
+    });
+    console.log('✅ 下载路径已设置为:', downloadPath);
+    
+    // 处理打印弹框 - 点击保存按钮
+    console.log('正在处理打印弹框...');
+    
+    // 等待打印对话框出现
+    const printDialogPromise = new Promise((resolve) => {
+      page.on('dialog', async (dialog) => {
+        console.log('检测到对话框:', dialog.message());
+        await dialog.accept();
+        resolve();
+      });
+    });
+    
+    // 如果打印对话框没有自动出现，尝试通过键盘快捷键触发保存
+    await page.waitForTimeout(1000);
+    
+    // 使用键盘快捷键 Ctrl+S 或 Cmd+S 保存
+    const isMac = process.platform === 'darwin';
+    const saveKey = isMac ? 'Meta+s' : 'Control+s';
+    await page.keyboard.down(saveKey);
+    await page.keyboard.up(saveKey);
+    console.log('已触发保存快捷键');
+    
+    // 等待下载完成
+    console.log('等待文件下载完成...');
+    await page.waitForTimeout(5000);
+    
+    // 重命名下载的文件
+    try {
+      const files = fs.readdirSync(downloadPath);
+      const pdfFiles = files.filter(file => file.endsWith('.pdf'));
+      const recentFile = pdfFiles
+        .map(file => ({
+          name: file,
+          time: fs.statSync(path.join(downloadPath, file)).mtime
+        }))
+        .sort((a, b) => b.time - a.time)[0];
+
+      if (recentFile) {
+        const oldPath = path.join(downloadPath, recentFile.name);
+        const newPath = path.join(downloadPath, `${fileName}.pdf`);
+        
+        // 如果目标文件已存在，先删除
+        if (fs.existsSync(newPath)) {
+          fs.unlinkSync(newPath);
+        }
+        
+        fs.renameSync(oldPath, newPath);
+        console.log(`✅ 文件已重命名为: ${newPath}`);
+      } else {
+        console.log('❌ 未找到下载的PDF文件');
+      }
+    } catch (renameError) {
+      console.error('❌ 重命名文件时出错:', renameError.message);
+    }
+    
   } catch (error) {
     console.log('❌ iframe内下载按钮未找到:', error.message);
   }
