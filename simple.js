@@ -126,6 +126,45 @@ async function run() {
     console.log('❌ 打印过程中出现错误:', error.message);
   }
 
+  // 查找并点击第二个和第三个.el-checkbox
+  try {
+    console.log('正在查找.el-checkbox元素...');
+    await page.waitForSelector('.el-checkbox', { timeout: 10000 });
+    
+    const checkboxes = await page.$$('.el-checkbox');
+    console.log(`✅ 找到 ${checkboxes.length} 个.el-checkbox元素`);
+    
+    if (checkboxes.length >= 3) {
+      // 点击第二个复选框（索引1）
+      await checkboxes[1].click();
+      console.log('✅ 已点击第二个.el-checkbox');
+      
+      // 点击第三个复选框（索引2）
+      await checkboxes[2].click();
+      console.log('✅ 已点击第三个.el-checkbox');
+      
+      // 等待5秒
+      console.log('等待5秒...');
+      await sleep(5000);
+      
+      // 生成新的PDF
+      console.log('开始生成第二个PDF...');
+      await page.emulateMediaType('screen');
+      const pdfBuffer2 = await page.pdf({
+        format: 'A4',
+        printBackground: false,
+        displayHeaderFooter: false
+      });
+      
+      fs.writeFileSync('hm.pdf', pdfBuffer2);
+      console.log('✅ PDF文件已保存为 hm.pdf');
+    } else {
+      console.log('⚠️ 未找到足够的.el-checkbox元素');
+    }
+  } catch (error) {
+    console.log('❌ 处理复选框时出现错误:', error.message);
+  }
+
 
   // 等待打印弹框出现
   // 监听所有对话框事件
