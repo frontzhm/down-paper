@@ -1,6 +1,6 @@
 {
   "name": "down-paper",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "批量下载试卷PDF工具 - 支持新东方在线教育平台的试卷批量下载",
   "main": "lib/index.js",
   "bin": {
