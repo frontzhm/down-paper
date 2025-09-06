@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const { generatePDF } = require('./pdfGenerator');
 const logger = require('./logger');
+const { getBrowserOptions, getPlatformInfo } = require('./browserConfig');
 
 // sleep函数
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -60,16 +61,26 @@ async function processIframeAndGeneratePDF(options) {
   try {
     // 启动浏览器 窗口最大化
     logger.info('启动浏览器（iframe处理）');
-    browser = await puppeteer.launch({
+    
+    // 获取跨平台浏览器配置
+    const browserOptions = getBrowserOptions({ 
       headless: false,
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
         '--window-size=2800,1200',
         '--start-maximized'
       ]
     });
+    const platformInfo = getPlatformInfo();
+    
+    // 记录浏览器配置信息
+    logger.info('浏览器配置（iframe处理）', { 
+      platform: platformInfo.platform,
+      arch: platformInfo.arch,
+      executablePath: browserOptions.executablePath || '使用默认路径',
+      chromeAvailable: platformInfo.chromeAvailable
+    });
+    
+    browser = await puppeteer.launch(browserOptions);
     logger.success('浏览器启动成功（iframe处理）');
     const page = await browser.newPage();
 

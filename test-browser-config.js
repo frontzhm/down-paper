@@ -4,107 +4,80 @@
  * 测试跨平台浏览器配置
  */
 
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
+const { getChromeExecutablePath, getBrowserOptions, isChromeAvailable, getPlatformInfo } = require('./src/browserConfig');
 
 console.log('🧪 测试跨平台浏览器配置...\n');
 
-const platform = os.platform();
-console.log(`当前平台: ${platform}`);
+try {
+  // 获取平台信息
+  const platformInfo = getPlatformInfo();
+  console.log('📊 平台信息:');
+  console.log(`   操作系统: ${platformInfo.platform}`);
+  console.log(`   架构: ${platformInfo.arch}`);
+  console.log(`   Chrome 路径: ${platformInfo.chromePath || '未找到'}`);
+  console.log(`   Chrome 可用: ${platformInfo.chromeAvailable ? '✅' : '❌'}`);
+  console.log('');
 
-// 模拟浏览器配置逻辑
-function getBrowserConfig() {
-  const browserOptions = {
-    headless: false,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--disable-gpu'
-    ]
-  };
-  
-  if (platform === 'darwin') {
-    // macOS
-    browserOptions.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-    console.log('🍎 macOS 配置:');
-    console.log(`   浏览器路径: ${browserOptions.executablePath}`);
-    console.log(`   路径存在: ${fs.existsSync(browserOptions.executablePath) ? '✅' : '❌'}`);
-    
-  } else if (platform === 'win32') {
-    // Windows - 尝试常见的 Chrome 安装路径
-    const possiblePaths = [
-      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe'
-    ];
-    
-    console.log('🪟 Windows 配置:');
-    console.log('   尝试的路径:');
-    
-    let foundPath = null;
-    for (const chromePath of possiblePaths) {
-      const exists = fs.existsSync(chromePath);
-      console.log(`   ${exists ? '✅' : '❌'} ${chromePath}`);
-      if (exists && !foundPath) {
-        foundPath = chromePath;
-      }
-    }
-    
-    if (foundPath) {
-      browserOptions.executablePath = foundPath;
-      console.log(`   ✅ 使用路径: ${foundPath}`);
-    } else {
-      console.log('   ⚠️  未找到 Chrome，将使用默认路径');
-    }
-    
+  // 测试 Chrome 路径检测
+  console.log('🔍 Chrome 路径检测:');
+  const chromePath = getChromeExecutablePath();
+  if (chromePath) {
+    console.log(`   ✅ 找到 Chrome: ${chromePath}`);
   } else {
-    // Linux 和其他系统
-    console.log('🐧 Linux/其他系统配置:');
-    console.log('   使用默认浏览器路径');
+    console.log('   ❌ 未找到 Chrome，将使用 Puppeteer 默认路径');
+  }
+  console.log('');
+
+  // 测试浏览器配置
+  console.log('⚙️  浏览器配置测试:');
+  
+  // 测试无头模式配置
+  const headlessOptions = getBrowserOptions({ headless: true });
+  console.log('   无头模式配置:');
+  console.log(`     headless: ${headlessOptions.headless}`);
+  console.log(`     executablePath: ${headlessOptions.executablePath || '使用默认'}`);
+  console.log(`     args: ${headlessOptions.args.length} 个参数`);
+  
+  // 测试有头模式配置
+  const headedOptions = getBrowserOptions({ 
+    headless: false,
+    args: ['--window-size=1920,1080']
+  });
+  console.log('   有头模式配置:');
+  console.log(`     headless: ${headedOptions.headless}`);
+  console.log(`     executablePath: ${headedOptions.executablePath || '使用默认'}`);
+  console.log(`     args: ${headedOptions.args.length} 个参数`);
+  console.log('');
+
+  // 测试 Chrome 可用性
+  console.log('✅ Chrome 可用性检查:');
+  if (isChromeAvailable()) {
+    console.log('   ✅ Chrome 可用，可以正常启动浏览器');
+  } else {
+    console.log('   ⚠️  Chrome 不可用，可能需要安装 Chrome 或使用 Puppeteer 默认浏览器');
+  }
+  console.log('');
+
+  console.log('🎉 跨平台浏览器配置测试完成！');
+  
+  // 提供安装建议
+  if (!isChromeAvailable()) {
+    console.log('\n💡 安装建议:');
+    if (platformInfo.platform === 'win32') {
+      console.log('   Windows: 请安装 Google Chrome 浏览器');
+      console.log('   下载地址: https://www.google.com/chrome/');
+    } else if (platformInfo.platform === 'darwin') {
+      console.log('   macOS: 请安装 Google Chrome 浏览器');
+      console.log('   下载地址: https://www.google.com/chrome/');
+    } else if (platformInfo.platform === 'linux') {
+      console.log('   Linux: 请安装 Google Chrome 或 Chromium');
+      console.log('   Ubuntu/Debian: sudo apt-get install google-chrome-stable');
+      console.log('   或者: sudo apt-get install chromium-browser');
+    }
   }
   
-  return browserOptions;
-}
-
-const config = getBrowserConfig();
-
-console.log('\n📋 最终浏览器配置:');
-console.log(`   平台: ${platform}`);
-console.log(`   无头模式: ${config.headless}`);
-console.log(`   浏览器路径: ${config.executablePath || '使用默认路径'}`);
-console.log(`   启动参数: ${config.args.length} 个`);
-
-console.log('\n🔧 启动参数详情:');
-config.args.forEach((arg, index) => {
-  console.log(`   ${index + 1}. ${arg}`);
-});
-
-// 测试 Puppeteer 是否能正常导入
-console.log('\n📦 测试 Puppeteer 导入:');
-try {
-  const puppeteer = require('puppeteer');
-  console.log('   ✅ Puppeteer 导入成功');
-  console.log(`   版本: ${puppeteer.version || '未知'}`);
 } catch (error) {
-  console.log('   ❌ Puppeteer 导入失败:', error.message);
+  console.error('❌ 浏览器配置测试失败:', error.message);
+  console.error('   错误详情:', error.stack);
+  process.exit(1);
 }
-
-console.log('\n🎯 建议:');
-if (platform === 'win32') {
-  console.log('   - 确保已安装 Google Chrome 浏览器');
-  console.log('   - 如果遇到问题，可以尝试安装 Chromium');
-  console.log('   - 或者使用无头模式运行');
-} else if (platform === 'darwin') {
-  console.log('   - 确保 Chrome 在 /Applications/ 目录下');
-  console.log('   - 如果使用 Homebrew 安装的 Chrome，路径可能不同');
-} else {
-  console.log('   - 确保已安装 Chrome 或 Chromium');
-  console.log('   - 在服务器环境中建议使用无头模式');
-}
-
-console.log('\n✨ 测试完成！');

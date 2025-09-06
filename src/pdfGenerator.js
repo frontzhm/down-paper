@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
+const { getBrowserOptions, getPlatformInfo } = require('./browserConfig');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
@@ -58,50 +59,17 @@ async function generatePDF(options) {
     // 启动浏览器
     logger.info('启动浏览器');
     
-    // 跨平台浏览器配置
-    const browserOptions = {
-      headless: headless,  // 使用传入的 headless 参数
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu'
-      ]
-    };
-    
-    // 根据操作系统设置浏览器路径
-    const os = require('os');
-    const platform = os.platform();
-    
-    if (platform === 'darwin') {
-      // macOS
-      browserOptions.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-    } else if (platform === 'win32') {
-      // Windows - 尝试常见的 Chrome 安装路径
-      const possiblePaths = [
-        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-        process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe'
-      ];
-      
-      const fs = require('fs');
-      for (const path of possiblePaths) {
-        if (fs.existsSync(path)) {
-          browserOptions.executablePath = path;
-          break;
-        }
-      }
-    }
-    // Linux 和其他系统使用默认路径
+    // 获取跨平台浏览器配置
+    const browserOptions = getBrowserOptions({ headless });
+    const platformInfo = getPlatformInfo();
     
     // 记录浏览器配置信息
     logger.info('浏览器配置', { 
-      platform, 
+      platform: platformInfo.platform,
+      arch: platformInfo.arch,
       executablePath: browserOptions.executablePath || '使用默认路径',
-      headless: browserOptions.headless 
+      headless: browserOptions.headless,
+      chromeAvailable: platformInfo.chromeAvailable
     });
     
     browser = await puppeteer.launch(browserOptions);

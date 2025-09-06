@@ -11,6 +11,7 @@
     "lib/",
     "README.md",
     "FIELD_DICTIONARY.md",
+    "WINDOWS_GUIDE.md",
     "package.json"
   ],
   "scripts": {
