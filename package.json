@@ -1,14 +1,40 @@
 {
   "name": "down-paper",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "批量下载试卷PDF工具 - 支持新东方在线教育平台的试卷批量下载",
+  "main": "lib/index.js",
+  "bin": {
+    "down-paper": "./bin/down-paper.js"
   },
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mkdir -p lib && cp -r src/* lib/ && cp main.js lib/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "pdf",
+    "download",
+    "education",
+    "xdf",
+    "puppeteer",
+    "batch",
+    "试卷",
+    "下载"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
   "dependencies": {
     "puppeteer": "^19.11.1"
-  }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/down-paper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/down-paper/issues"
+  },
+  "homepage": "https://github.com/yourusername/down-paper#readme"
 }

@@ -1,0 +1,39 @@
+# 源代码目录（发布时使用 lib 目录）
+src/
+
+# 开发文件
+main.js
+example.js
+
+# 日志文件
+logs/
+
+# 下载文件
+1-download/
+
+# 开发工具
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# 测试文件
+test/
+tests/
+*.test.js
+
+# 文档
+docs/
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

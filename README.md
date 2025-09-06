@@ -1,144 +1,304 @@
-# PDF批量生成工具
+# 📚 批量下载试卷PDF工具
 
-这是一个自动化的PDF生成工具，可以批量处理多个链接，生成对应的PDF文件（包含答案版本和无答案版本）。
+一个用于批量下载新东方在线教育平台试卷PDF的Node.js工具，支持命令行和编程接口两种使用方式。
 
-## 功能特性
+## ✨ 功能特性
 
-- 批量处理多个链接
-- 自动处理iframe内容
-- 生成两个版本的PDF：原版和答案版
-- 详细的日志记录系统
-- 错误处理和重试机制
+- 🚀 **批量下载**: 支持批量下载多个试卷PDF文件
+- 📝 **双版本生成**: 自动生成原版和带答案版本
+- 🎯 **灵活配置**: 支持自定义年级、学期、科目等参数
+- 💻 **多种使用方式**: 支持命令行工具和编程接口
+- 📊 **详细日志**: 提供完整的执行日志和统计信息
+- 🔧 **易于集成**: 可作为npm包集成到其他项目中
 
-## 文件结构
+## 📦 安装
 
-```
-├── index.js              # 主入口文件，处理批量链接
-├── iframeProcessor.js    # iframe处理模块
-├── pdfGenerator.js       # PDF生成模块
-├── logger.js             # 日志系统模块
-├── logs/                 # 日志文件目录
-│   └── pdf-generator-YYYY-MM-DD.log
-└── README.md             # 说明文档
+### 全局安装（推荐）
+
+```bash
+npm install -g down-paper
 ```
 
-## 日志系统
+### 本地安装
 
-### 日志文件位置
-- 日志文件保存在 `./logs/` 目录下
-- 文件名格式：`pdf-generator-YYYY-MM-DD.log`
-- 每天生成一个新的日志文件
-
-### 日志级别
-- **INFO**: 一般信息，如流程开始、页面访问等
-- **SUCCESS**: 成功操作，如PDF生成成功、元素找到等
-- **WARN**: 警告信息，如元素未找到但不影响主流程
-- **ERROR**: 错误信息，如PDF生成失败、严重错误等
-
-### 日志内容
-日志记录包含以下重要信息：
-
-#### 整体运行日志
-- 批量任务开始时间
-- 每个链接的处理状态
-- 成功/失败统计
-- 总耗时
-
-#### PDF生成日志
-- PDF生成开始时间
-- 文件名和保存路径
-- 文件大小
-- 生成失败的详细错误信息
-
-#### 错误详情
-当PDF生成失败时，日志会记录：
-- 错误消息
-- 错误堆栈
-- 失败的URL
-- 失败的步骤（如：复选框点击、元素查找等）
-- 相关的选择器和参数
-
-### 日志示例
-
+```bash
+npm install down-paper
 ```
-[2024-01-15 10:30:15] [INFO] 开始批量PDF生成任务
-[2024-01-15 10:30:15] [INFO] 开始处理链接 1/12
-[2024-01-15 10:30:20] [SUCCESS] 启动浏览器
-[2024-01-15 10:30:25] [SUCCESS] 页面访问成功
-[2024-01-15 10:30:30] [SUCCESS] 找到文本元素
-[2024-01-15 10:30:35] [SUCCESS] PDF生成成功
-[2024-01-15 10:30:40] [ERROR] PDF生成失败
-{
-  "fileName": "苏教版-4年级-第5讲",
-  "error": "Node is either not clickable or not an HTMLElement",
-  "context": {
-    "type": "second_pdf",
-    "step": "generate_with_answers",
-    "selector": ".el-checkbox",
-    "indexes": [1, 2]
+
+### 从源码安装
+
+```bash
+git clone https://github.com/yourusername/down-paper.git
+cd down-paper
+npm install
+npm link  # 链接到全局，支持命令行使用
+```
+
+## 🚀 使用方法
+
+### 1. 命令行使用
+
+#### 基本用法
+
+```bash
+down-paper --cookie "your-cookie-string"
+```
+
+#### 完整参数
+
+```bash
+down-paper \
+  --cookie "your-cookie-string" \
+  --subject-id 1574 \
+  --grade "0557" \
+  --quarter 3 \
+  --use-scene "khlx" \
+  --output-dir "./downloads"
+```
+
+#### 参数说明
+
+| 参数 | 简写 | 必需 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `--cookie` | `-c` | ✅ | - | Cookie字符串 |
+| `--subject-id` | `-s` | ❌ | 1574 | 科目ID |
+| `--grade` | `-g` | ❌ | 0557 | 年级代码 |
+| `--quarter` | `-q` | ❌ | 3 | 学期 |
+| `--use-scene` | `-u` | ❌ | khlx | 使用场景 |
+| `--output-dir` | `-o` | ❌ | ./1-download | 输出目录 |
+| `--help` | `-h` | ❌ | - | 显示帮助信息 |
+| `--version` | `-v` | ❌ | - | 显示版本号 |
+
+#### 年级代码对照表
+
+| 代码 | 年级 |
+|------|------|
+| 0557 | 一年级 |
+| 0558 | 二年级 |
+| 0559 | 三年级 |
+| 0560 | 四年级 |
+
+#### 使用场景对照表
+
+| 代码 | 场景 |
+|------|------|
+| khlx | 课后测试 |
+| qzks | 期中考试 |
+| qmks | 期末考试 |
+
+### 2. 编程接口使用
+
+#### 基本用法
+
+```javascript
+const downPaper = require('down-paper');
+
+async function downloadPapers() {
+  try {
+    const result = await downPaper.generateBatchPDFs({
+      cookie: 'your-cookie-string',
+      queryParams: {
+        subjectId: 1574,
+        grade: '0557',
+        quarter: 3
+      },
+      outputDir: './downloads'
+    });
+    
+    console.log('下载完成:', result);
+  } catch (error) {
+    console.error('下载失败:', error.message);
   }
+}
+
+downloadPapers();
+```
+
+#### API 参考
+
+##### `generateBatchPDFs(options)`
+
+批量生成PDF文件的主要方法。
+
+**参数:**
+
+- `options.cookie` (string, 必需): Cookie字符串
+- `options.queryParams` (object): 查询参数
+  - `subjectId` (number): 科目ID，默认 1574
+  - `useScene` (string): 使用场景，默认 'khlx'
+  - `grade` (string): 年级，默认 '0557'
+  - `quarter` (number): 学期，默认 3
+- `options.outputDir` (string): 输出目录，默认 './1-download'
+
+**返回值:**
+
+```javascript
+{
+  total: 10,        // 总任务数
+  success: 8,       // 成功任务数
+  failed: 2,        // 失败任务数
+  duration: 120000, // 总耗时（毫秒）
+  failedLinks: [    // 失败的链接详情
+    {
+      index: 1,
+      url: 'https://example.com/paper1',
+      error: 'Error message'
+    }
+  ]
 }
 ```
 
-## 使用方法
+##### `getPapers(params, cookies)`
 
-1. 确保已安装依赖：
-   ```bash
-   npm install puppeteer
-   ```
+获取试卷列表。
 
-2. 运行批量生成：
-   ```bash
-   node index.js
-   ```
+```javascript
+const papers = await downPaper.getPapers({
+  subjectId: 1574,
+  grade: '0557'
+}, 'your-cookie-string');
+```
 
-3. 查看日志：
-   ```bash
-   # 查看今天的日志
-   cat logs/pdf-generator-$(date +%Y-%m-%d).log
-   
-   # 实时监控日志
-   tail -f logs/pdf-generator-$(date +%Y-%m-%d).log
-   ```
+##### `createLinks(papersData)`
 
-## 错误排查
+从试卷数据生成链接数组。
 
-### 常见错误及解决方案
+```javascript
+const links = downPaper.createLinks(papersData);
+```
 
-1. **"Node is either not clickable or not an HTMLElement"**
-   - 原因：复选框元素不可点击或不存在
-   - 解决：检查页面加载是否完成，或调整等待时间
+##### `processSinglePDF(options)`
 
-2. **"未找到iframe"**
-   - 原因：页面iframe未加载完成
-   - 解决：增加等待时间或检查页面结构
+处理单个iframe并生成PDF。
 
-3. **"PDF生成失败"**
-   - 原因：页面内容未完全加载或网络问题
-   - 解决：检查网络连接，增加超时时间
+```javascript
+const result = await downPaper.processSinglePDF({
+  url: 'https://example.com/paper',
+  cookies: 'your-cookie-string',
+  outputDir: './downloads'
+});
+```
 
-### 调试模式
-- 浏览器以非无头模式运行，可以看到实际操作过程
-- 所有操作都有详细的日志记录
-- 错误时会保留错误现场信息
+##### `generateSinglePDF(options)`
 
-## 配置说明
+生成单个PDF文件。
 
-### 主要配置项
-- `linkArr`: 要处理的URL列表
-- `cookies`: 认证cookie信息
-- `checkboxSelector`: 复选框选择器
-- `checkboxIndexes`: 要点击的复选框索引
-- `outputDir`: PDF输出目录
+```javascript
+const result = await downPaper.generateSinglePDF({
+  url: 'https://example.com/paper',
+  cookies: cookieArray,
+  outputDir: './downloads'
+});
+```
 
-### 超时设置
-- 页面加载超时：60秒
-- 元素等待超时：30秒
-- iframe加载超时：60秒
+##### `getLogger()`
 
-## 注意事项
+获取日志记录器实例。
 
-1. 确保Chrome浏览器已安装在默认路径
-2. 确保有足够的磁盘空间存储PDF文件和日志
-3. 网络连接稳定，避免超时错误
-4. 定期清理旧的日志文件
+```javascript
+const logger = downPaper.getLogger();
+logger.info('开始处理');
+```
+
+## 🔧 配置说明
+
+### Cookie 获取方法
+
+1. 登录新东方在线教育平台
+2. 打开浏览器开发者工具 (F12)
+3. 切换到 Network 标签页
+4. 刷新页面或进行任何操作
+5. 在请求头中找到 `Cookie` 字段
+6. 复制完整的 Cookie 字符串
+
+### 输出文件结构
+
+```
+downloads/
+├── 1年级/
+│   ├── 思维B-1年级-第1讲.pdf
+│   ├── 思维B-1年级-第1讲-答案.pdf
+│   ├── 思维B-1年级-第2讲.pdf
+│   └── 思维B-1年级-第2讲-答案.pdf
+├── 2年级/
+│   ├── 人教版-2年级-第4讲.pdf
+│   └── 人教版-2年级-第4讲-答案.pdf
+└── ...
+```
+
+## 📝 日志系统
+
+工具提供完整的日志记录功能：
+
+- **控制台输出**: 实时显示执行进度和结果
+- **文件日志**: 自动保存到 `logs/` 目录
+- **日志级别**: INFO, WARN, ERROR, SUCCESS
+- **详细统计**: 包含成功率、耗时等统计信息
+
+## 🛠️ 开发
+
+### 项目结构
+
+```
+down-paper/
+├── bin/                    # CLI 入口文件
+│   └── down-paper.js
+├── lib/                    # 发布后的代码
+│   ├── index.js           # API 入口
+│   ├── batchProcessor.js  # 批量处理逻辑
+│   ├── iframeProcessor.js # iframe 处理
+│   ├── pdfGenerator.js    # PDF 生成
+│   ├── request.js         # HTTP 请求
+│   └── logger.js          # 日志系统
+├── src/                   # 源代码
+├── logs/                  # 日志文件
+├── 1-download/           # 默认下载目录
+├── package.json
+└── README.md
+```
+
+### 构建
+
+```bash
+npm run build
+```
+
+### 测试
+
+```bash
+# 测试 CLI 工具
+down-paper --help
+
+# 测试 API
+node -e "console.log(require('./lib/index.js').version)"
+```
+
+## 📄 许可证
+
+MIT License
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📞 支持
+
+如果您在使用过程中遇到问题，请：
+
+1. 查看 [Issues](https://github.com/yourusername/down-paper/issues)
+2. 提交新的 Issue
+3. 联系维护者
+
+## 🔄 更新日志
+
+### v1.0.0
+
+- ✨ 初始版本发布
+- 🚀 支持批量下载试卷PDF
+- 💻 提供命令行和编程接口
+- 📊 完整的日志系统
+- 🎯 灵活的配置选项
+
+---
+
+**注意**: 请确保您有权限访问相关教育资源，并遵守相关使用条款。
