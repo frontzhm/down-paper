@@ -87,7 +87,10 @@ function showHelp() {
   down-paper --cookie "your-cookie-string"
 
   # 指定自定义输出目录（推荐）
+  # Linux/macOS:
   down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
+  # Windows:
+  down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
 
   # 指定年级和输出目录
   down-paper --cookie "your-cookie-string" --grade "0558" --output-dir "./downloads"

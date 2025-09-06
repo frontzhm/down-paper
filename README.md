@@ -52,13 +52,17 @@ npm link  # 链接到全局，支持命令行使用
 down-paper --cookie "your-cookie-string"
 
 # 方式2：指定自定义输出目录（推荐）
+# Linux/macOS:
 down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
+
+# Windows:
+down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
 ```
 
 #### 完整参数
 
 ```bash
-# 指定所有参数和自定义输出目录
+# Linux/macOS - 指定所有参数和自定义输出目录
 down-paper \
   --cookie "your-cookie-string" \
   --subject-id 1574 \
@@ -66,6 +70,15 @@ down-paper \
   --quarter 3 \
   --use-scene "khlx" \
   --output-dir "./downloads"
+
+# Windows - 指定所有参数和自定义输出目录
+down-paper ^
+  --cookie "your-cookie-string" ^
+  --subject-id 1574 ^
+  --grade "0557" ^
+  --quarter 3 ^
+  --use-scene "khlx" ^
+  --output-dir ".\\downloads"
 ```
 
 #### 参数说明
@@ -344,6 +357,13 @@ MIT License
 3. 联系维护者
 
 ## 🔄 更新日志
+
+### v2.3.0
+
+- 🖥️ **跨平台**: 添加了 Windows 路径兼容性支持
+- 🔧 **修复**: 使用 `path.join()` 和 `path.sep` 确保跨平台路径处理
+- 📝 **完善**: 更新了 Windows 和 Linux/macOS 的使用示例
+- 🎯 **优化**: 改进了路径标准化逻辑，避免双分隔符问题
 
 ### v2.2.0
 
