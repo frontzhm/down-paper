@@ -1761,3 +1761,348 @@
   "failed": 3,
   "duration": "932.07秒"
 }
+[2025-09-06 13:23:13] [INFO] 开始批量PDF生成任务
+{
+  "startTime": "2025-09-06T13:23:13.346Z",
+  "config": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0559",
+    "quarter": 3
+  }
+}
+[2025-09-06 13:23:13] [INFO] 开始获取试卷列表
+[2025-09-06 13:23:13] [INFO] 开始请求试卷列表API
+{
+  "url": "https://iteach-content-management-api.xdf.cn/api/papers?subjectId=1574&useScene=khlx&grade=0559&quarter=3&year=&semester=&useType=&asc=time&desc=&ownerType=3&schoolId=-1&keywords=&pageNo=1&pageSize=300",
+  "params": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0559",
+    "quarter": 3,
+    "year": "",
+    "semester": "",
+    "useType": "",
+    "asc": "time",
+    "desc": "",
+    "ownerType": 3,
+    "schoolId": -1,
+    "keywords": "",
+    "pageNo": 1,
+    "pageSize": 300
+  }
+}
+[2025-09-06 13:23:13] [SUCCESS] 试卷列表API请求成功
+{
+  "statusCode": 200,
+  "dataCount": 0
+}
+[2025-09-06 13:23:13] [SUCCESS] 试卷列表获取完成
+{
+  "papersCount": 12,
+  "linksCount": 12
+}
+[2025-09-06 13:23:13] [INFO] 开始处理链接 1/12
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=042bf980bbc94299be7700ea793c7f4d&questionBankHubPaperId=CL0fe8eced793f4001bec440e4f8c184a5&updateTime=2025-09-04%2B17%3A07%3A31&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4A-3%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:23:13] [INFO] 开始iframe处理流程
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=042bf980bbc94299be7700ea793c7f4d&questionBankHubPaperId=CL0fe8eced793f4001bec440e4f8c184a5&updateTime=2025-09-04%2B17%3A07%3A31&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4A-3%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit",
+  "downloadSelector": "#app .source_main_box .title .title-right .top-name-div .print-btn",
+  "printSelector": ".down-info .down-info-btn .print-btn",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:23:13] [INFO] 启动浏览器（iframe处理）
+[2025-09-06 13:23:19] [SUCCESS] 浏览器启动成功（iframe处理）
+[2025-09-06 13:23:20] [INFO] 正在访问主页面
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=042bf980bbc94299be7700ea793c7f4d&questionBankHubPaperId=CL0fe8eced793f4001bec440e4f8c184a5&updateTime=2025-09-04%2B17%3A07%3A31&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4A-3%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:23:30] [INFO] 开始批量PDF生成任务
+{
+  "startTime": "2025-09-06T13:23:30.474Z",
+  "config": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0559",
+    "quarter": 3
+  }
+}
+[2025-09-06 13:23:30] [INFO] 开始获取试卷列表
+[2025-09-06 13:23:30] [INFO] 开始请求试卷列表API
+{
+  "url": "https://iteach-content-management-api.xdf.cn/api/papers?subjectId=1574&useScene=khlx&grade=0559&quarter=3&year=&semester=&useType=&asc=time&desc=&ownerType=3&schoolId=-1&keywords=&pageNo=1&pageSize=300",
+  "params": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0559",
+    "quarter": 3,
+    "year": "",
+    "semester": "",
+    "useType": "",
+    "asc": "time",
+    "desc": "",
+    "ownerType": 3,
+    "schoolId": -1,
+    "keywords": "",
+    "pageNo": 1,
+    "pageSize": 300
+  }
+}
+[2025-09-06 13:23:30] [SUCCESS] 试卷列表API请求成功
+{
+  "statusCode": 200,
+  "dataCount": 0
+}
+[2025-09-06 13:23:30] [SUCCESS] 试卷列表获取完成
+{
+  "papersCount": 12,
+  "linksCount": 12
+}
+[2025-09-06 13:23:30] [INFO] 开始处理链接 1/12
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=042bf980bbc94299be7700ea793c7f4d&questionBankHubPaperId=CL0fe8eced793f4001bec440e4f8c184a5&updateTime=2025-09-04%2B17%3A07%3A31&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4A-3%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:23:30] [INFO] 开始iframe处理流程
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=042bf980bbc94299be7700ea793c7f4d&questionBankHubPaperId=CL0fe8eced793f4001bec440e4f8c184a5&updateTime=2025-09-04%2B17%3A07%3A31&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4A-3%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit",
+  "downloadSelector": "#app .source_main_box .title .title-right .top-name-div .print-btn",
+  "printSelector": ".down-info .down-info-btn .print-btn",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:23:30] [INFO] 启动浏览器（iframe处理）
+[2025-09-06 13:24:46] [INFO] 开始批量PDF生成任务
+{
+  "startTime": "2025-09-06T13:24:46.323Z",
+  "config": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0557",
+    "quarter": 3
+  }
+}
+[2025-09-06 13:24:46] [INFO] 开始获取试卷列表
+[2025-09-06 13:24:46] [INFO] 开始请求试卷列表API
+{
+  "url": "https://iteach-content-management-api.xdf.cn/api/papers?subjectId=1574&useScene=khlx&grade=0557&quarter=3&year=&semester=&useType=&asc=time&desc=&ownerType=3&schoolId=-1&keywords=&pageNo=1&pageSize=300",
+  "params": {
+    "subjectId": 1574,
+    "useScene": "khlx",
+    "grade": "0557",
+    "quarter": 3,
+    "year": "",
+    "semester": "",
+    "useType": "",
+    "asc": "time",
+    "desc": "",
+    "ownerType": 3,
+    "schoolId": -1,
+    "keywords": "",
+    "pageNo": 1,
+    "pageSize": 300
+  }
+}
+[2025-09-06 13:24:46] [SUCCESS] 试卷列表API请求成功
+{
+  "statusCode": 200,
+  "dataCount": 0
+}
+[2025-09-06 13:24:46] [SUCCESS] 试卷列表获取完成
+{
+  "papersCount": 5,
+  "linksCount": 5
+}
+[2025-09-06 13:24:46] [INFO] 开始处理链接 1/5
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=9fa2e3a8e0804e8cbe68fd24b689b7be&questionBankHubPaperId=CL166c0f5a4a19412685836b42c6621184&updateTime=2025-09-03%2B16%3A28%3A30&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4B-1%E5%B9%B4%E7%BA%A7-%E7%AC%AC4%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:24:46] [INFO] 开始iframe处理流程
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=9fa2e3a8e0804e8cbe68fd24b689b7be&questionBankHubPaperId=CL166c0f5a4a19412685836b42c6621184&updateTime=2025-09-03%2B16%3A28%3A30&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4B-1%E5%B9%B4%E7%BA%A7-%E7%AC%AC4%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit",
+  "downloadSelector": "#app .source_main_box .title .title-right .top-name-div .print-btn",
+  "printSelector": ".down-info .down-info-btn .print-btn",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:24:46] [INFO] 启动浏览器（iframe处理）
+[2025-09-06 13:24:53] [SUCCESS] 浏览器启动成功（iframe处理）
+[2025-09-06 13:24:53] [INFO] 正在访问主页面
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=9fa2e3a8e0804e8cbe68fd24b689b7be&questionBankHubPaperId=CL166c0f5a4a19412685836b42c6621184&updateTime=2025-09-03%2B16%3A28%3A30&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4B-1%E5%B9%B4%E7%BA%A7-%E7%AC%AC4%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:25:20] [SUCCESS] 主页面访问成功
+[2025-09-06 13:25:20] [INFO] 正在检查iframe加载状态
+[2025-09-06 13:25:20] [SUCCESS] iframe已找到
+[2025-09-06 13:25:20] [SUCCESS] iframe内容框架已获取
+[2025-09-06 13:25:20] [SUCCESS] iframe内容加载完成
+[2025-09-06 13:25:20] [SUCCESS] iframe文档状态完成
+[2025-09-06 13:25:20] [INFO] 正在等待主页面按钮出现
+{
+  "selector": "#app .source_main_box .title .title-right .top-name-div .print-btn"
+}
+[2025-09-06 13:25:20] [SUCCESS] 主页面按钮已找到
+[2025-09-06 13:25:21] [SUCCESS] 主页面按钮已点击
+[2025-09-06 13:25:21] [INFO] 正在等待iframe内的下载按钮出现
+{
+  "selector": ".down-info .down-info-btn .print-btn"
+}
+[2025-09-06 13:25:22] [SUCCESS] 已获取iframe内容框架
+[2025-09-06 13:25:22] [SUCCESS] iframe内下载按钮已找到
+[2025-09-06 13:25:22] [INFO] 下载按钮信息
+{
+  "text": "立即打印"
+}
+[2025-09-06 13:25:22] [SUCCESS] 获取到frame URL
+{
+  "frameUrl": "https://tiji.xdf.cn/downloadPreView?tenantId=1001&subject=%5Bobject%20Object%5D&jwSubject=1574&stage=2&businessId=CL166c0f5a4a19412685836b42c6621184&pageSource=PaperCenter"
+}
+[2025-09-06 13:25:22] [INFO] 关闭iframe处理浏览器
+[2025-09-06 13:25:22] [INFO] 开始调用generatePDF方法处理frame内容
+[2025-09-06 13:25:22] [INFO] 开始PDF生成流程
+{
+  "url": "https://tiji.xdf.cn/downloadPreView?tenantId=1001&subject=%5Bobject%20Object%5D&jwSubject=1574&stage=2&businessId=CL166c0f5a4a19412685836b42c6621184&pageSource=PaperCenter",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox",
+  "checkboxIndexes": [
+    1,
+    2
+  ]
+}
+[2025-09-06 13:25:22] [INFO] 启动浏览器
+[2025-09-06 13:25:26] [SUCCESS] 浏览器启动成功
+[2025-09-06 13:25:26] [INFO] 正在访问页面
+{
+  "url": "https://tiji.xdf.cn/downloadPreView?tenantId=1001&subject=%5Bobject%20Object%5D&jwSubject=1574&stage=2&businessId=CL166c0f5a4a19412685836b42c6621184&pageSource=PaperCenter"
+}
+[2025-09-06 13:25:44] [SUCCESS] 页面访问成功
+[2025-09-06 13:25:44] [INFO] 找到.preview-breadcrumb元素
+[2025-09-06 13:25:44] [SUCCESS] 已移除.preview-breadcrumb元素
+[2025-09-06 13:25:44] [INFO] 找到.down-preview-container-left元素
+[2025-09-06 13:25:44] [SUCCESS] 已设置.down-preview-container-left的padding为0
+[2025-09-06 13:25:44] [INFO] 正在查找文本元素
+{
+  "selector": ".x-text"
+}
+[2025-09-06 13:25:44] [SUCCESS] 找到文本元素
+{
+  "content": "FY26秋-思维B-1年级-第4讲-课后相似题"
+}
+[2025-09-06 13:25:44] [SUCCESS] 文件名生成成功
+{
+  "fileName": "思维B-1年级-第4讲",
+  "originalText": "FY26秋-思维B-1年级-第4讲-课后相似题"
+}
+[2025-09-06 13:25:44] [INFO] 开始生成PDF
+{
+  "url": "https://tiji.xdf.cn/downloadPreView?tenantId=1001&subject=%5Bobject%20Object%5D&jwSubject=1574&stage=2&businessId=CL166c0f5a4a19412685836b42c6621184&pageSource=PaperCenter",
+  "fileName": "思维B-1年级-第4讲",
+  "timestamp": "2025-09-06T13:25:44.385Z"
+}
+[2025-09-06 13:25:44] [INFO] 开始生成第一个PDF（无答案版本）
+[2025-09-06 13:25:45] [SUCCESS] PDF生成成功
+{
+  "fileName": "思维B-1年级-第4讲",
+  "filePath": "./1-download思维B-1年级-第4讲.pdf",
+  "fileSize": "475.60 KB"
+}
+[2025-09-06 13:25:45] [INFO] 开始查找复选框元素
+{
+  "selector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:25:45] [SUCCESS] 找到复选框元素
+{
+  "count": 3,
+  "selector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:25:45] [INFO] 开始点击复选框
+{
+  "indexes": [
+    1,
+    2
+  ]
+}
+[2025-09-06 13:25:46] [SUCCESS] 已点击第2个复选框
+[2025-09-06 13:25:51] [SUCCESS] 已点击第3个复选框
+[2025-09-06 13:26:02] [INFO] 等待答案内容加载
+[2025-09-06 13:26:02] [SUCCESS] 答案内容加载完成
+[2025-09-06 13:26:02] [INFO] 开始生成第二个PDF（含答案版本）
+[2025-09-06 13:26:03] [SUCCESS] PDF生成成功
+{
+  "fileName": "思维B-1年级-第4讲-答案",
+  "filePath": "./1-download思维B-1年级-第4讲-答案.pdf",
+  "fileSize": "802.54 KB"
+}
+[2025-09-06 13:26:03] [SUCCESS] PDF生成流程完成
+{
+  "fileName": "思维B-1年级-第4讲",
+  "filesGenerated": 2,
+  "files": [
+    "./1-download思维B-1年级-第4讲.pdf",
+    "./1-download思维B-1年级-第4讲-答案.pdf"
+  ]
+}
+[2025-09-06 13:26:03] [INFO] 关闭浏览器
+[2025-09-06 13:26:03] [SUCCESS] iframe处理流程完成
+{
+  "fileName": "思维B-1年级-第4讲",
+  "files": [
+    "./1-download思维B-1年级-第4讲.pdf",
+    "./1-download思维B-1年级-第4讲-答案.pdf"
+  ],
+  "fileCount": 2
+}
+[2025-09-06 13:26:03] [INFO] 关闭iframe处理浏览器（finally）
+[2025-09-06 13:26:03] [SUCCESS] 链接处理完成 1/5
+{
+  "fileName": "思维B-1年级-第4讲",
+  "files": [
+    "./1-download思维B-1年级-第4讲.pdf",
+    "./1-download思维B-1年级-第4讲-答案.pdf"
+  ],
+  "fileCount": 2
+}
+[2025-09-06 13:26:03] [INFO] 开始处理链接 2/5
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=0b62cde6213d433b839978dcb1530162&questionBankHubPaperId=CL131e620b94344c1587c63c5e172cce04&updateTime=2025-09-03%2B16%3A28%3A20&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4B-1%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit"
+}
+[2025-09-06 13:26:03] [INFO] 开始iframe处理流程
+{
+  "url": "https://iteach-cloudwps.xdf.cn/paperEditor?paperId=0b62cde6213d433b839978dcb1530162&questionBankHubPaperId=CL131e620b94344c1587c63c5e172cce04&updateTime=2025-09-03%2B16%3A28%3A20&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E6%80%9D%E7%BB%B4B-1%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit",
+  "downloadSelector": "#app .source_main_box .title .title-right .top-name-div .print-btn",
+  "printSelector": ".down-info .down-info-btn .print-btn",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox"
+}
+[2025-09-06 13:26:03] [INFO] 启动浏览器（iframe处理）
+[2025-09-06 13:27:42] [INFO] 创建输出目录
+{
+  "outputDir": "./test-output/"
+}
+[2025-09-06 13:27:58] [INFO] 创建输出目录
+{
+  "outputDir": "./test-output/"
+}
+[2025-09-06 13:27:58] [INFO] 开始PDF生成流程
+{
+  "url": "https://example.com/test",
+  "textSelector": ".x-text",
+  "checkboxSelector": ".down-type-container-info .el-checkbox",
+  "checkboxIndexes": [
+    1,
+    2
+  ]
+}
+[2025-09-06 13:27:58] [INFO] 启动浏览器
+[2025-09-06 13:28:04] [SUCCESS] 浏览器启动成功
+[2025-09-06 13:28:05] [INFO] 正在访问页面
+{
+  "url": "https://example.com/test"
+}
+[2025-09-06 13:28:08] [SUCCESS] 页面访问成功
+[2025-09-06 13:28:18] [WARN] 未找到.preview-breadcrumb元素
+{
+  "error": "Waiting for selector `.preview-breadcrumb` failed: Waiting failed: 10000ms exceeded"
+}

@@ -15,19 +15,33 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  * @returns {Promise<Object>} 返回生成的文件信息
  */
 async function generatePDF(options) {
-  const {
+  let {
     url,
     cookies = [],
     textSelector = '.x-text',
     checkboxSelector = '.down-type-container-info .el-checkbox',
     checkboxIndexes = [1, 2],
-    outputDir = ''
+    outputDir = './download/'
   } = options;
 
   if (!url) {
     const error = new Error('URL参数是必需的');
     logger.error('generatePDF参数验证失败', { error: error.message });
     throw error;
+  }
+
+  // 确保输出目录存在并格式化路径
+  if (outputDir) {
+    // 确保路径末尾有斜杠
+    const normalizedOutputDir = outputDir.endsWith('/') ? outputDir : outputDir + '/';
+    
+    if (!fs.existsSync(normalizedOutputDir)) {
+      fs.mkdirSync(normalizedOutputDir, { recursive: true });
+      logger.info('创建输出目录', { outputDir: normalizedOutputDir });
+    }
+    
+    // 更新 outputDir 为标准化后的路径
+    outputDir = normalizedOutputDir;
   }
 
   logger.info('开始PDF生成流程', { url, textSelector, checkboxSelector, checkboxIndexes });

@@ -83,8 +83,11 @@ function showHelp() {
   -v, --version                显示版本号
 
 示例:
-  # 基本用法
+  # 基本用法（使用默认输出目录）
   down-paper --cookie "your-cookie-string"
+
+  # 指定自定义输出目录（推荐）
+  down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
 
   # 指定年级和输出目录
   down-paper --cookie "your-cookie-string" --grade "0558" --output-dir "./downloads"
@@ -121,6 +124,11 @@ function validateOptions(options) {
 async function main() {
   try {
     console.log('🚀 批量下载试卷PDF工具启动中...\n');
+    
+    // 显示重要提醒
+    console.log('⚠️  重要提醒:');
+    console.log('   建议使用 --output-dir 参数指定输出目录');
+    console.log('   默认会在当前目录创建 1-download 文件夹\n');
     
     const options = parseArgs();
     validateOptions(options);
