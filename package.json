@@ -6,6 +6,13 @@
   "bin": {
     "down-paper": "./bin/down-paper.js"
   },
+  "files": [
+    "bin/",
+    "lib/",
+    "README.md",
+    "FIELD_DICTIONARY.md",
+    "package.json"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "mkdir -p lib && cp -r src/* lib/ && cp main.js lib/index.js",

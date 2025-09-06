@@ -93,15 +93,18 @@ function showHelp() {
   down-paper --cookie "your-cookie-string" --subject-id 1574 --grade "0557" --quarter 3 --use-scene "khlx" --output-dir "./downloads"
 
 年级代码:
-  0557 - 一年级
-  0558 - 二年级  
-  0559 - 三年级
-  0560 - 四年级
+  0555 - S3          0556 - S4          0557 - 一年级
+  0558 - 二年级      0559 - 三年级      0560 - 四年级
+  0561 - 五年级      0562 - 六年级      0567 - 不区分
+  0999 - 小升初
 
 使用场景:
-  khlx - 课后测试
-  qzks - 期中考试
-  qmks - 期末考试
+  gdk   - 功底考      jdcp  - 阶段测试      khlx  - 课后测试
+  nlcp  - 能力测评    syttl - 素养天天练
+
+学期代码:
+  1 - 春季           2 - 暑假           3 - 秋季
+  4 - 寒假           9 - 不区分
 `);
 }
 
