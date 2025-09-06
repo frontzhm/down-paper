@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { runBatchPDFGeneration } = require('../src/batchProcessor');
+const { runBatchPDFGeneration } = require('../lib/batchProcessor');
 const path = require('path');
 
 /**

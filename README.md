@@ -358,6 +358,12 @@ MIT License
 
 ## 🔄 更新日志
 
+### v2.3.1
+
+- 🔧 **修复**: 修复了 Windows 下 "cannot find module ../src/batchProcessor" 错误
+- 📦 **构建**: 优化了构建脚本，确保发布包中的模块路径正确
+- 🎯 **完善**: 修复了 CLI 工具和 API 入口的模块引用问题
+
 ### v2.3.0
 
 - 🖥️ **跨平台**: 添加了 Windows 路径兼容性支持
