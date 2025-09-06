@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+// sleep
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function run() {
   // 启动浏览器
@@ -8,21 +10,21 @@ async function run() {
     headless: false, // 先使用非无头模式进行调试
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     args: [
-      '--no-sandbox', 
+      '--no-sandbox',
       '--disable-setuid-sandbox',
       '--window-size=2800,1200',
       '--start-maximized'
     ]
   });
   const page = await browser.newPage();
-  
+
   // 设置窗口大小
   await page.setViewport({ width: 1500, height: 1200 });
-  
+
   // 检查实际窗口大小
   const viewport = await page.viewport();
   console.log('设置的视口大小:', viewport);
-  
+
   // 获取实际窗口大小
   const windowSize = await page.evaluate(() => {
     return {
@@ -49,44 +51,46 @@ async function run() {
     { name: 'ac5caea5d6c36013_gr_session_id_sent_vst', value: 'edcf5031-19c4-4a1f-8b20-48e16f578f36', domain: '.xdf.cn' },
     { name: 'wpsUserInfo', value: '{%22useId%22:%22408aea3f921d4edf9e14dcacf3537bf6%22%2C%22nickName%22:%22%E5%88%98%E4%B8%B9%E5%A6%AE%22%2C%22name%22:%22%E5%88%98%E4%B8%B9%E5%A6%AE%22%2C%22email%22:%22liudanni7@xdf.cn%22}', domain: '.xdf.cn' }
   ];
-  
+
   await page.setCookie(...cookies);
+
+
 
   // 打开一个网页
   await page.goto('https://iteach-cloudwps.xdf.cn/paperEditor?paperId=77d3642015c549e8b393e83008285f0a&questionBankHubPaperId=CL2ffcf14ad3984eab801a695dfc80dde7&updateTime=2025-09-05%2B14%3A17%3A11&subjectName=%E8%84%91%E5%8A%9B%E4%B8%8E%E6%80%9D%E7%BB%B4&subjectId=1574&name=FY26%E7%A7%8B-%E8%8B%8F%E6%95%99%E7%89%88-4%E5%B9%B4%E7%BA%A7-%E7%AC%AC5%E8%AE%B2-%E8%AF%BE%E5%90%8E%E7%9B%B8%E4%BC%BC%E9%A2%98&schoolName=%E9%9B%86%E5%9B%A2&ownerType=3&useScene=khlx&showMode=edit');
 
   // 等待页面加载完成
-  await new Promise(resolve => setTimeout(resolve, 30*1000)); // 30秒
-  
+  await new Promise(resolve => setTimeout(resolve, 30 * 1000)); // 30秒
+
   // 检查iframe是否加载完成
   console.log('正在检查iframe加载状态...');
   try {
     // 等待iframe出现
     await page.waitForSelector('iframe', { timeout: 10000 });
     console.log('✅ iframe已找到');
-    
+
     // 获取iframe元素
     const iframe = await page.$('iframe');
     const frame = await iframe.contentFrame();
-    
+
     if (frame) {
       console.log('✅ iframe内容框架已获取');
-      
+
       // 等待iframe内容加载完成
       try {
         await frame.waitForSelector('body', { timeout: 30000 });
         console.log('✅ iframe内容加载完成');
-        
+
         // 等待iframe内的网络请求完成
         await frame.waitForFunction(() => {
           return document.readyState === 'complete';
         }, { timeout: 30000 });
         console.log('✅ iframe文档状态完成');
-        
+
       } catch (frameError) {
         console.log('❌ iframe内容加载超时:', frameError.message);
       }
-      
+
     } else {
       console.log('❌ 无法获取iframe内容框架');
     }
@@ -95,13 +99,13 @@ async function run() {
   }
 
   // 尝试多种可能的选择器
-  
+
   const downloadSelector = '#app .source_main_box .title .title-right .top-name-div .print-btn'
-  
+
   // 等待按钮存在后再点击
   console.log('正在等待按钮出现...');
   try {
-    await page.waitForSelector(downloadSelector, { timeout: 30*1000 });
+    await page.waitForSelector(downloadSelector, { timeout: 30 * 1000 });
     console.log('✅ 按钮已找到！');
     await page.click(downloadSelector);
     console.log('✅ 按钮已点击！');
@@ -113,30 +117,30 @@ async function run() {
   console.log('正在等待iframe内的下载按钮出现...');
   const printSelector = '.down-info .down-info-btn .print-btn'
   console.log('查找的选择器:', printSelector);
-  
+
   try {
     // 获取iframe
     const iframe = await page.$('iframe');
     if (!iframe) {
       throw new Error('未找到iframe');
     }
-    
+
     const frame = await iframe.contentFrame();
     if (!frame) {
       throw new Error('无法获取iframe内容框架');
     }
-    
+
     console.log('✅ 已获取iframe内容框架');
-    
+
     // 在iframe内等待按钮出现
-    await frame.waitForSelector(printSelector, { timeout: 60*1000 });
+    await frame.waitForSelector(printSelector, { timeout: 60 * 1000 });
     console.log('✅ iframe内下载按钮已找到！');
-    
+
     // 打印下载按钮信息
     const downloadButton = await frame.$(printSelector);
     const buttonText = await frame.evaluate(el => el.textContent, downloadButton);
     console.log('下载按钮文本:', buttonText);
-    
+
     // 在iframe内点击按钮
     await frame.click(printSelector);
     console.log('✅ iframe内下载按钮已点击！');
@@ -145,104 +149,40 @@ async function run() {
     const urlParams = new URLSearchParams(currentUrl.split('?')[1]);
     const fileName = urlParams.get('name') || '试卷';
     console.log('提取的文件名:', fileName);
-    
+
     // 设置下载路径到当前项目目录的download文件夹
     const downloadPath = path.join(__dirname, 'download');
-    
+
     // 确保download文件夹存在
     if (!fs.existsSync(downloadPath)) {
       fs.mkdirSync(downloadPath, { recursive: true });
       console.log('✅ 已创建download文件夹:', downloadPath);
     }
-    
+
     // 等待并检测浏览器打印弹框是否出现
     console.log('等待浏览器打印弹框出现...');
-    
+
     // 使用Command+P调起浏览器打印弹框
     console.log('正在调起浏览器打印弹框...');
-    await page.keyboard.down('Meta');
-    await page.keyboard.press('p');
-    await page.keyboard.up('Meta');
-    console.log('✅ 已按下Command+P调起打印弹框');
-    
-    // 等待打印弹框出现
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    
-    // 监听浏览器对话框事件
-    console.log('正在监听浏览器对话框事件...');
-    
-    // 设置打印模式检测标志
-    let isPrintMode = false;
-    
-    // 监听页面对话框事件
-    page.on('dialog', async (dialog) => {
-      console.log('检测到对话框:', dialog.type(), dialog.message());
-      if (dialog.type() === 'beforeprint' || dialog.message().includes('print')) {
-        isPrintMode = true;
-        console.log('✅ 检测到打印模式');
-      }
-      await dialog.accept();
-    });
-    
-    // 监听打印事件
-    await page.evaluateOnNewDocument(() => {
-      window.addEventListener('beforeprint', () => {
-        console.log('打印预览即将显示');
-        window.isPrintMode = true;
+
+    await sleep(10000);
+    try {
+      console.log('开始生成PDF...');
+      await page.emulateMediaType('screen')
+      await sleep(1000)
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        displayHeaderFooter: false
       });
-      window.addEventListener('afterprint', () => {
-        console.log('打印预览已关闭');
-        window.isPrintMode = false;
-      });
-    });
-    
-    // 检查是否处于打印模式
-    const printStatus = await page.evaluate(() => {
-      return {
-        isPrintMode: window.isPrintMode || false,
-        hasPrintFunction: typeof window.print === 'function',
-        printMediaQuery: window.matchMedia ? window.matchMedia('print').matches : false
-      };
-    });
-    
-    console.log('打印状态检查:', printStatus);
-    
-    if (printStatus.isPrintMode || printStatus.printMediaQuery) {
-      console.log('✅ 确认处于打印模式，开始选择第二项打印机...');
       
-      // 使用Tab键导航到打印机选择区域
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // 选择第二项打印机（按一次下箭头键）
-      await page.keyboard.press('ArrowDown');
-      console.log('✅ 已选择第二项打印机');
-      
-      // 等待5秒
-      console.log('等待5秒后触发保存...');
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
-      // 触发保存
-      console.log('正在触发保存...');
-      
-      // 使用Tab键导航到保存按钮
-      for (let i = 0; i < 6; i++) {
-        await page.keyboard.press('Tab');
-        await new Promise(resolve => setTimeout(resolve, 200));
-      }
-      
-      // 按回车键点击保存按钮
-      await page.keyboard.press('Enter');
-      console.log('✅ 已触发保存');
-      
-    } else {
-      console.log('⚠️ 未检测到打印模式，跳过打印机选择');
+      fs.writeFileSync('hn.pdf', pdfBuffer);
+      console.log('✅ PDF文件已保存为 hn.pdf');
+    } catch (error) {
+      console.log('❌ 打印过程中出现错误:', error.message);
     }
-    
-    
+
+
   } catch (error) {
     console.log('❌ iframe内下载按钮未找到:', error.message);
   }
