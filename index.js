@@ -24,7 +24,7 @@ async function run() {
       // 课后测试
       useScene: 'khlx',
       // 一年级 0557 二年级 0558 三年级 0559 四年级 0560
-      grade: '0558',
+      grade: '0559',
       // 秋季
       quarter: 3,
       // 每页300条
