@@ -41,6 +41,9 @@ function parseArgs() {
       case '-o':
         options.outputDir = args[++i];
         break;
+      case '--headless':
+        options.headless = true;
+        break;
       case '--help':
       case '-h':
         showHelp();
@@ -79,6 +82,7 @@ function showHelp() {
   -q, --quarter <number>       学期 (默认: 3)
   -u, --use-scene <string>     使用场景 (默认: khlx)
   -o, --output-dir <string>    输出目录 (默认: ./1-download)
+  --headless                   使用无头模式运行浏览器 (适合服务器环境)
   -h, --help                   显示帮助信息
   -v, --version                显示版本号
 
@@ -97,6 +101,9 @@ function showHelp() {
 
   # 指定所有参数
   down-paper --cookie "your-cookie-string" --subject-id 1574 --grade "0557" --quarter 3 --use-scene "khlx" --output-dir "./downloads"
+
+  # 使用无头模式（适合服务器环境）
+  down-paper --cookie "your-cookie-string" --headless --output-dir "./downloads"
 
 年级代码:
   0555 - S3          0556 - S4          0557 - 一年级
@@ -145,7 +152,8 @@ async function main() {
         grade: options.grade || '0557',
         quarter: options.quarter || 3
       },
-      outputDir: options.outputDir || './1-download'
+      outputDir: options.outputDir || './1-download',
+      headless: options.headless || false
     };
     
     console.log('📋 配置信息:');
@@ -154,6 +162,7 @@ async function main() {
     console.log(`   学期: ${config.queryParams.quarter}`);
     console.log(`   使用场景: ${config.queryParams.useScene}`);
     console.log(`   输出目录: ${config.outputDir}`);
+    console.log(`   无头模式: ${config.headless ? '是' : '否'}`);
     console.log(`   Cookie: ${config.cookie.substring(0, 50)}...`);
     console.log('');
     

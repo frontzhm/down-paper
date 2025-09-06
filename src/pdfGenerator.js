@@ -22,7 +22,8 @@ async function generatePDF(options) {
     textSelector = '.x-text',
     checkboxSelector = '.down-type-container-info .el-checkbox',
     checkboxIndexes = [1, 2],
-    outputDir = './download/'
+    outputDir = './download/',
+    headless = false  // 新增：是否使用无头模式
   } = options;
 
   if (!url) {
@@ -56,11 +57,54 @@ async function generatePDF(options) {
   try {
     // 启动浏览器
     logger.info('启动浏览器');
-    browser = await puppeteer.launch({
-      headless: false,
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    
+    // 跨平台浏览器配置
+    const browserOptions = {
+      headless: headless,  // 使用传入的 headless 参数
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu'
+      ]
+    };
+    
+    // 根据操作系统设置浏览器路径
+    const os = require('os');
+    const platform = os.platform();
+    
+    if (platform === 'darwin') {
+      // macOS
+      browserOptions.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    } else if (platform === 'win32') {
+      // Windows - 尝试常见的 Chrome 安装路径
+      const possiblePaths = [
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+        process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe'
+      ];
+      
+      const fs = require('fs');
+      for (const path of possiblePaths) {
+        if (fs.existsSync(path)) {
+          browserOptions.executablePath = path;
+          break;
+        }
+      }
+    }
+    // Linux 和其他系统使用默认路径
+    
+    // 记录浏览器配置信息
+    logger.info('浏览器配置', { 
+      platform, 
+      executablePath: browserOptions.executablePath || '使用默认路径',
+      headless: browserOptions.headless 
     });
+    
+    browser = await puppeteer.launch(browserOptions);
     logger.success('浏览器启动成功');
 
     const page = await browser.newPage();
@@ -241,12 +285,48 @@ async function generatePDF(options) {
     return result;
 
   } catch (error) {
-    logger.error('PDF生成过程中出现严重错误', { 
-      error: error.message, 
-      stack: error.stack,
-      url 
-    });
-    throw error;
+    // 特殊处理浏览器启动错误
+    if (error.message.includes('Failed to launch the browser process') || 
+        error.message.includes('spawn') || 
+        error.message.includes('ENOENT')) {
+      
+      const os = require('os');
+      const platform = os.platform();
+      
+      let errorMessage = '浏览器启动失败。';
+      
+      if (platform === 'win32') {
+        errorMessage += '\n\nWindows 系统解决方案：';
+        errorMessage += '\n1. 确保已安装 Google Chrome 浏览器';
+        errorMessage += '\n2. 如果已安装，请尝试重新安装 Chrome';
+        errorMessage += '\n3. 或者安装 Chromium: npm install -g chromium';
+        errorMessage += '\n4. 或者使用无头模式（在代码中设置 headless: true）';
+      } else if (platform === 'darwin') {
+        errorMessage += '\n\nmacOS 系统解决方案：';
+        errorMessage += '\n1. 确保已安装 Google Chrome 浏览器';
+        errorMessage += '\n2. 检查 Chrome 是否在 /Applications/ 目录下';
+      } else {
+        errorMessage += '\n\nLinux 系统解决方案：';
+        errorMessage += '\n1. 安装 Chrome: sudo apt-get install google-chrome-stable';
+        errorMessage += '\n2. 或者安装 Chromium: sudo apt-get install chromium-browser';
+      }
+      
+      logger.error('浏览器启动失败', { 
+        error: error.message, 
+        platform,
+        url,
+        solution: errorMessage
+      });
+      
+      throw new Error(errorMessage);
+    } else {
+      logger.error('PDF生成过程中出现严重错误', { 
+        error: error.message, 
+        stack: error.stack,
+        url 
+      });
+      throw error;
+    }
   } finally {
     if (browser) {
       logger.info('关闭浏览器');
