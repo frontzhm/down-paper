@@ -112,6 +112,38 @@ async function run() {
   //   window.print();
 
   // });
+
+  // 查找.x-text元素并处理文本内容
+  let fileName = 'hn.pdf'; // 默认文件名
+  try {
+    console.log('正在查找.x-text元素...');
+    await page.waitForSelector('.x-text', { timeout: 10000 });
+    
+    const textContent = await page.evaluate(() => {
+      const element = document.querySelector('.x-text');
+      return element ? element.textContent : null;
+    });
+    
+    if (textContent) {
+      console.log('✅ 找到.x-text元素，文本内容:', textContent);
+      
+      // 以-分割，取第二、三、四项，再用-拼接
+      const parts = textContent.split('-');
+      if (parts.length >= 4) {
+        const result = `${parts[1]}-${parts[2]}-${parts[3]}`;
+        fileName = `${result}`;
+        console.log('✅ 处理后的字符串:', result);
+        console.log('✅ 生成的文件名:', fileName);
+      } else {
+        console.log('⚠️ 文本内容分割后项数不足4项');
+      }
+    } else {
+      console.log('⚠️ 未找到.x-text元素或元素无文本内容');
+    }
+  } catch (error) {
+    console.log('❌ 处理.x-text元素时出现错误:', error.message);
+  }
+  
   try {
     await page.emulateMediaType('screen')
     const pdfBuffer = await page.pdf({
@@ -120,8 +152,8 @@ async function run() {
       displayHeaderFooter: false
     });
 
-    fs.writeFileSync('hn.pdf', pdfBuffer);
-    console.log('✅ PDF文件已保存为 hn.pdf');
+    fs.writeFileSync(fileName+'.pdf', pdfBuffer);
+    console.log(`✅ PDF文件已保存为 ${fileName}`);
   } catch (error) {
     console.log('❌ 打印过程中出现错误:', error.message);
   }
@@ -156,7 +188,7 @@ async function run() {
         displayHeaderFooter: false
       });
       
-      fs.writeFileSync('hm.pdf', pdfBuffer2);
+      fs.writeFileSync(fileName+'-答案.pdf', pdfBuffer2);
       console.log('✅ PDF文件已保存为 hm.pdf');
     } else {
       console.log('⚠️ 未找到足够的.el-checkbox元素');
