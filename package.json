@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p lib && cp -r src/* lib/ && node -e \"const fs=require('fs'); const content=fs.readFileSync('main.js','utf8').replace(/require\\(\\\\.\\/src\\//g,'require(\\\\./'); fs.writeFileSync('lib/index.js',content);\"",
+    "build": "mkdir -p lib && cp main.js lib/index.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
