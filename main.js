@@ -13,10 +13,6 @@ if (require.main === module) {
   console.log('🚀 批量下载试卷PDF工具');
   console.log('📝 使用默认配置运行...\n');
   
-  console.log('⚠️  重要提醒:');
-  console.log('   工具会在当前目录创建 1-download 文件夹');
-  console.log('   建议使用 --output-dir 参数指定自定义输出目录\n');
-  
   const params = {
     cookie: 'xx',
     queryParams: {

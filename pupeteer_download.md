@@ -99,7 +99,7 @@ npm包都发完了！
 好在也有动态获取安装路径的法子！
 这就算搞定了！
 
-## 问题6：怎么也能显示进度和整体情况！
+## 问题6：怎么也能显示进度和整体情况?
 
 朋友说，我这不知道总共几个链接，也不晓得成功和失败几个啊！
 啊！
@@ -110,9 +110,254 @@ npm包都发完了！
 
 ## 下面说代码了
 
-### bin/down-paper.js
+### bin/down-paper.js - CLI命令行工具
 
-首先是支持命令，项目里建个`bin/down-paper.js`，参数和支持选项
+这是npm包的CLI（命令行界面）入口文件，让用户可以通过命令行直接使用工具。当用户安装包后，可以通过`down-paper`命令来运行工具。
+
+#### 🎯 主要功能
+
+1. **命令行参数解析**: 解析用户输入的各种参数
+2. **参数验证**: 验证必需参数（如cookie）是否提供
+3. **帮助信息**: 提供`--help`参数显示使用说明
+4. **版本信息**: 提供`--version`参数显示版本号
+5. **配置构建**: 将命令行参数转换为内部配置对象
+6. **执行调用**: 调用核心的`runBatchPDFGeneration`函数
+
+#### 📋 支持的参数
+
+| 参数 | 简写 | 必需 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `--cookie` | `-c` | ✅ | 无 | Cookie字符串，用于身份验证 |
+| `--subject-id` | `-s` | ❌ | 1574 | 科目ID |
+| `--grade` | `-g` | ❌ | 0557 | 年级代码 |
+| `--quarter` | `-q` | ❌ | 3 | 学期代码 |
+| `--use-scene` | `-u` | ❌ | khlx | 使用场景代码 |
+| `--output-dir` | `-o` | ❌ | ./1-download | 输出目录 |
+| `--help` | `-h` | ❌ | - | 显示帮助信息 |
+| `--version` | `-v` | ❌ | - | 显示版本号 |
+
+#### 🔧 技术实现
+
+- **参数解析**: 使用`process.argv`手动解析命令行参数
+- **错误处理**: 完善的错误捕获和用户友好的错误提示
+- **配置转换**: 将命令行参数转换为内部API所需的配置格式
+- **跨平台**: 支持Windows、macOS、Linux的命令行使用
+
+#### 💻 核心代码实现
+
+```javascript
+#!/usr/bin/env node
+
+const { runBatchPDFGeneration } = require('../lib/batchProcessor');
+const path = require('path');
+
+/**
+ * CLI 命令行工具
+ * 支持通过命令行参数配置和运行批量PDF生成任务
+ */
+
+// 解析命令行参数
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const options = {};
+  
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    
+    switch (arg) {
+      case '--cookie':
+      case '-c':
+        options.cookie = args[++i];
+        break;
+      case '--subject-id':
+      case '-s':
+        options.subjectId = parseInt(args[++i]);
+        break;
+      case '--grade':
+      case '-g':
+        options.grade = args[++i];
+        break;
+      case '--quarter':
+      case '-q':
+        options.quarter = parseInt(args[++i]);
+        break;
+      case '--use-scene':
+      case '-u':
+        options.useScene = args[++i];
+        break;
+      case '--output-dir':
+      case '-o':
+        options.outputDir = args[++i];
+        break;
+      case '--help':
+      case '-h':
+        showHelp();
+        process.exit(0);
+        break;
+      case '--version':
+      case '-v':
+        console.log(require('../package.json').version);
+        process.exit(0);
+        break;
+      default:
+        if (arg.startsWith('--')) {
+          console.error(`未知参数: ${arg}`);
+          showHelp();
+          process.exit(1);
+        }
+        break;
+    }
+  }
+  
+  return options;
+}
+
+// 显示帮助信息
+function showHelp() {
+  console.log(`
+📚 批量下载试卷PDF工具
+
+用法:
+  down-paper [选项]
+
+选项:
+  -c, --cookie <string>        Cookie字符串 (必需)
+  -s, --subject-id <number>    科目ID (默认: 1574)
+  -g, --grade <string>         年级 (默认: 0557)
+  -q, --quarter <number>       学期 (默认: 3)
+  -u, --use-scene <string>     使用场景 (默认: khlx)
+  -o, --output-dir <string>    输出目录 (默认: ./1-download)
+  -h, --help                   显示帮助信息
+  -v, --version                显示版本号
+
+示例:
+  # 基本用法（使用默认输出目录）
+  down-paper --cookie "your-cookie-string"
+
+  # 指定自定义输出目录（推荐）
+  # Linux/macOS:
+  down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
+  # Windows:
+  down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
+
+  # 指定年级和输出目录
+  down-paper --cookie "your-cookie-string" --grade "0558" --output-dir "./downloads"
+
+  # 指定所有参数
+  down-paper --cookie "your-cookie-string" --subject-id 1574 --grade "0557" --quarter 3 --use-scene "khlx" --output-dir "./downloads"
+
+年级代码:
+  0555 - S3          0556 - S4          0557 - 一年级
+  0558 - 二年级      0559 - 三年级      0560 - 四年级
+  0561 - 五年级      0562 - 六年级      0567 - 不区分
+  0999 - 小升初
+
+使用场景:
+  gdk   - 功底考      jdcp  - 阶段测试      khlx  - 课后测试
+  nlcp  - 能力测评    syttl - 素养天天练
+
+学期代码:
+  1 - 春季           2 - 暑假           3 - 秋季
+  4 - 寒假           9 - 不区分
+`);
+}
+
+// 验证必需参数
+function validateOptions(options) {
+  if (!options.cookie) {
+    console.error('❌ 错误: 必须提供 --cookie 参数');
+    console.log('使用 --help 查看帮助信息');
+    process.exit(1);
+  }
+}
+
+// 主函数
+async function main() {
+  try {
+    console.log('🚀 批量下载试卷PDF工具启动中...\n');
+    
+    const options = parseArgs();
+    validateOptions(options);
+    
+    // 构建配置对象
+    const config = {
+      cookie: options.cookie,
+      queryParams: {
+        subjectId: options.subjectId || 1574,
+        useScene: options.useScene || 'khlx',
+        grade: options.grade || '0557',
+        quarter: options.quarter || 3
+      },
+      outputDir: options.outputDir || './1-download'
+    };
+    
+    console.log('📋 配置信息:');
+    console.log(`   科目ID: ${config.queryParams.subjectId}`);
+    console.log(`   年级: ${config.queryParams.grade}`);
+    console.log(`   学期: ${config.queryParams.quarter}`);
+    console.log(`   使用场景: ${config.queryParams.useScene}`);
+    console.log(`   输出目录: ${config.outputDir}`);
+    console.log(`   Cookie: ${config.cookie.substring(0, 50)}...`);
+    console.log('');
+    
+    // 执行批量PDF生成
+    const result = await runBatchPDFGeneration(config);
+    
+    console.log('\n🎉 任务完成!');
+    console.log(`   总计: ${result.total} 个任务`);
+    console.log(`   成功: ${result.success} 个`);
+    console.log(`   失败: ${result.failed} 个`);
+    console.log(`   耗时: ${(result.duration / 1000).toFixed(2)} 秒`);
+    
+    if (result.failed > 0) {
+      console.log('\n❌ 失败的链接:');
+      result.failedLinks.forEach(link => {
+        console.log(`   ${link.index}. ${link.url}`);
+        console.log(`      错误: ${link.error}`);
+      });
+    }
+    
+  } catch (error) {
+    console.error('❌ 执行失败:', error.message);
+    if (process.env.DEBUG) {
+      console.error(error.stack);
+    }
+    process.exit(1);
+  }
+}
+
+// 如果直接运行此文件，则执行主函数
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main, parseArgs, showHelp };
+```
+
+#### 🎯 关键特性
+
+1. **Shebang行**: `#!/usr/bin/env node` 让系统知道用Node.js执行
+2. **参数解析**: 手动解析`process.argv`，支持长参数和短参数
+3. **参数验证**: 检查必需参数（cookie）是否存在
+4. **帮助系统**: 详细的帮助信息，包括参数说明和使用示例
+5. **配置转换**: 将命令行参数转换为内部API格式
+6. **错误处理**: 友好的错误提示和退出码
+7. **跨平台**: 支持不同操作系统的路径格式
+8. **调试支持**: 通过`DEBUG`环境变量显示详细错误信息
+
+#### 📦 npm包配置
+
+在`package.json`中配置：
+
+```json
+{
+  "bin": {
+    "down-paper": "./bin/down-paper.js"
+  }
+}
+```
+
+这样用户安装包后就可以直接使用`down-paper`命令了。
 
 ![down_paper4.png](https://blog-huahua.oss-cn-beijing.aliyuncs.com/blog/code/down_paper4.png)
 
@@ -256,11 +501,6 @@ async function main() {
   try {
     console.log('🚀 批量下载试卷PDF工具启动中...\n');
     
-    // 显示重要提醒
-    console.log('⚠️  重要提醒:');
-    console.log('   建议使用 --output-dir 参数指定输出目录');
-    console.log('   默认会在当前目录创建 1-download 文件夹\n');
-    
     const options = parseArgs();
     validateOptions(options);
     
@@ -345,10 +585,6 @@ const { runBatchPDFGeneration } = require('./batchProcessor');
 if (require.main === module) {
   console.log('🚀 批量下载试卷PDF工具');
   console.log('📝 使用默认配置运行...\n');
-  
-  console.log('⚠️  重要提醒:');
-  console.log('   工具会在当前目录创建 1-download 文件夹');
-  console.log('   建议使用 --output-dir 参数指定自定义输出目录\n');
   
   const params = {
     

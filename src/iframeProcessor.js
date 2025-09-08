@@ -66,7 +66,7 @@ async function processIframeAndGeneratePDF(options) {
     const browserOptions = getBrowserOptions({ 
       headless: false,
       args: [
-        '--window-size=2800,1200',
+        '--window-size=2500,1200',
         '--start-maximized'
       ]
     });

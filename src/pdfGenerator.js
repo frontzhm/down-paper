@@ -60,7 +60,14 @@ async function generatePDF(options) {
     logger.info('启动浏览器');
     
     // 获取跨平台浏览器配置
-    const browserOptions = getBrowserOptions({ headless });
+    // const browserOptions = getBrowserOptions({ headless });
+    const browserOptions = getBrowserOptions({ 
+      headless,
+      args: [
+        '--window-size=2500,1200',
+        '--start-maximized'
+      ]
+    });
     const platformInfo = getPlatformInfo();
     
     // 记录浏览器配置信息
@@ -76,13 +83,6 @@ async function generatePDF(options) {
     logger.success('浏览器启动成功');
 
     const page = await browser.newPage();
-
-    // 监听页面控制台消息
-    // page.on('console', msg => {
-    //   console.log('页面控制台:', msg.text());
-    // });
-
-    // 设置窗口大小
     await page.setViewport({ width: 1500, height: 1200 });
 
     // 设置cookie

@@ -135,11 +135,6 @@ async function main() {
   try {
     console.log('🚀 批量下载试卷PDF工具启动中...\n');
     
-    // 显示重要提醒
-    console.log('⚠️  重要提醒:');
-    console.log('   建议使用 --output-dir 参数指定输出目录');
-    console.log('   默认会在当前目录创建 1-download 文件夹\n');
-    
     const options = parseArgs();
     validateOptions(options);
     
