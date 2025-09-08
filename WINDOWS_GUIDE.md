@@ -15,7 +15,7 @@
 1. 访问 [Node.js 官网](https://nodejs.org/)
 2. 下载 Windows 版本的 LTS 版本
 3. 运行安装程序，按默认设置安装
-4. 打开命令提示符（CMD）或 PowerShell，验证安装：
+4. `win + r`打开命令提示符（CMD）或 PowerShell，验证安装：
    ```cmd
    node --version
    npm --version
@@ -23,9 +23,18 @@
 
 #### 2. 安装 down-paper 工具
 
+**方法一：标准安装（推荐）**
 ```cmd
 npm install -g down-paper
 ```
+
+**方法二：如果遇到 Puppeteer 下载 Chromium 超时问题**
+```cmd
+# 跳过 Puppeteer 的 Chromium 下载
+set PUPPETEER_SKIP_DOWNLOAD=true
+npm install -g down-paper
+```
+
 
 #### 3. 安装 Chrome 浏览器（如果未安装）
 
@@ -41,8 +50,11 @@ npm install -g down-paper
 # 使用默认输出目录
 down-paper --cookie "your-cookie-string"
 
-# 指定自定义输出目录（推荐）
-down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
+# 指定参数和自定义输出目录（推荐）
+down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" 
+
+# 使用完整参数名
+down-paper --use-scene "nlcp" --grade "0560" --quarter "4" --cookie "your-cookie-string"
 ```
 
 #### 完整参数示例
@@ -51,9 +63,9 @@ down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
 down-paper ^
   --cookie "your-cookie-string" ^
   --subject-id 1574 ^
-  --grade "0557" ^
-  --quarter 3 ^
-  --use-scene "khlx" ^
+  --grade "0560" ^
+  --quarter 4 ^
+  --use-scene "nlcp" ^
   --output-dir ".\\downloads"
 ```
 
@@ -151,6 +163,68 @@ npm uninstall -g down-paper
 
 # 重新安装
 npm install -g down-paper
+```
+
+## 🔧 常见问题故障排除
+
+### 问题1: Puppeteer 安装失败
+
+**错误信息**:
+```
+npm error ERROR: Failed to set up Chromium r1108766! Set "PUPPETEER_SKIP_DOWNLOAD" env variable to skip download.
+npm error AggregateError [ETIMEDOUT]:
+```
+
+**解决方案**:
+```cmd
+# 方法1: 跳过 Chromium 下载
+set PUPPETEER_SKIP_DOWNLOAD=true
+npm install -g down-paper
+
+# 方法2: 使用国内镜像
+npm install -g down-paper --registry=https://registry.npmmirror.com
+
+# 方法3: 在 PowerShell 中
+$env:PUPPETEER_SKIP_DOWNLOAD="true"
+npm install -g down-paper
+```
+
+### 问题2: Chrome 浏览器未找到
+
+**错误信息**:
+```
+Failed to launch the browser process! spawn chrome ENOENT
+```
+
+**解决方案**:
+1. 确保已安装 Google Chrome 浏览器
+2. 检查 Chrome 安装路径是否正确
+3. 手动指定 Chrome 路径（如果需要）
+
+### 问题3: 权限问题
+
+**错误信息**:
+```
+EACCES: permission denied
+```
+
+**解决方案**:
+```cmd
+# 使用管理员权限运行命令提示符
+# 或者使用 npx 运行
+npx down-paper --help
+```
+
+### 问题4: 网络连接问题
+
+**解决方案**:
+```cmd
+# 配置 npm 代理（如果需要）
+npm config set proxy http://proxy-server:port
+npm config set https-proxy http://proxy-server:port
+
+# 或者使用国内镜像
+npm config set registry https://registry.npmmirror.com
 ```
 
 ### 联系支持

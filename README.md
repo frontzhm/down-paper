@@ -19,6 +19,25 @@
 npm install -g down-paper
 ```
 
+### Windows 用户安装问题解决
+
+如果在 Windows 上遇到 Puppeteer 安装失败的问题：
+
+```cmd
+# 方法1: 跳过 Chromium 下载
+set PUPPETEER_SKIP_DOWNLOAD=true
+npm install -g down-paper
+
+# 方法2: 使用国内镜像源
+npm install -g down-paper --registry=https://registry.npmmirror.com
+
+# 方法3: 在 PowerShell 中
+$env:PUPPETEER_SKIP_DOWNLOAD="true"
+npm install -g down-paper
+```
+
+详细说明请参考 [Windows 使用指南](WINDOWS_GUIDE.md)。
+
 ### 本地安装
 
 ```bash
@@ -44,12 +63,15 @@ npm link  # 链接到全局，支持命令行使用
 # 方式1：使用默认输出目录（在当前目录创建 1-download 文件夹）
 down-paper --cookie "your-cookie-string"
 
-# 方式2：指定自定义输出目录（推荐）
+# 方式2：指定参数和自定义输出目录（推荐）
 # Linux/macOS:
-down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
+down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" --output-dir "./my-papers"
 
 # Windows:
-down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
+down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" --output-dir ".\\my-papers"
+
+# 方式3：使用完整参数名
+down-paper --use-scene "nlcp" --grade "0560" --quarter "4" --cookie "your-cookie-string"
 ```
 
 #### 完整参数
@@ -59,18 +81,18 @@ down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
 down-paper \
   --cookie "your-cookie-string" \
   --subject-id 1574 \
-  --grade "0557" \
-  --quarter 3 \
-  --use-scene "khlx" \
+  --grade "0560" \
+  --quarter 4 \
+  --use-scene "nlcp" \
   --output-dir "./downloads"
 
 # Windows - 指定所有参数和自定义输出目录
 down-paper ^
   --cookie "your-cookie-string" ^
   --subject-id 1574 ^
-  --grade "0557" ^
-  --quarter 3 ^
-  --use-scene "khlx" ^
+  --grade "0560" ^
+  --quarter 4 ^
+  --use-scene "nlcp" ^
   --output-dir ".\\downloads"
 ```
 
@@ -160,8 +182,9 @@ async function downloadPapers() {
       cookie: 'your-cookie-string',
       queryParams: {
         subjectId: 1574,
-        grade: '0557',
-        quarter: 3
+        grade: '0560',
+        quarter: 4,
+        useScene: 'nlcp'
       },
       outputDir: './downloads'  // 指定输出目录，避免文件冲突
     });
