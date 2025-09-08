@@ -3,29 +3,32 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
 const { getBrowserOptions, getPlatformInfo } = require('./browserConfig');
+const { genCookies } = require('./genCookies');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * 生成PDF文件的方法
  * @param {Object} options - 配置选项
  * @param {string} options.url - 要访问的URL
- * @param {Array} options.cookies - Cookie数组
+ * @param {string} options.cookie - Cookie字符串
  * @param {string} options.textSelector - 用于生成文件名的文本选择器（默认：'.x-text'）
  * @param {string} options.checkboxSelector - 复选框选择器（默认：'.el-checkbox'）
  * @param {Array} options.checkboxIndexes - 要点击的复选框索引数组（默认：[1, 2]）
  * @param {string} options.outputDir - 输出目录（默认：当前目录）
+ * @param {boolean} options.headless - 是否使用无头模式（默认：false）
  * @returns {Promise<Object>} 返回生成的文件信息
  */
 async function generatePDF(options) {
   let {
     url,
-    cookies = [],
+    cookie = '',
     textSelector = '.x-text',
     checkboxSelector = '.down-type-container-info .el-checkbox',
     checkboxIndexes = [1, 2],
     outputDir = './download/',
-    headless = false  // 新增：是否使用无头模式
+    headless = false
   } = options;
+  const cookieArray = genCookies(cookie);
 
   if (!url) {
     const error = new Error('URL参数是必需的');
@@ -86,8 +89,8 @@ async function generatePDF(options) {
     await page.setViewport({ width: 1500, height: 1200 });
 
     // 设置cookie
-    if (cookies.length > 0) {
-      await page.setCookie(...cookies);
+    if (cookieArray.length > 0) {
+      await page.setCookie(...cookieArray);
     }
 
     // 访问页面

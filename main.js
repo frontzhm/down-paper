@@ -14,7 +14,7 @@ if (require.main === module) {
   console.log('📝 使用默认配置运行...\n');
   
   const params = {
-    cookie: 'xx',
+    cookie: 'gr_user_id=f5bbcce9-7b86-48d5-b270-67c04aaa6621; XDFUUID=db0b0bd2-6407-b293-514e-fc4984c6c284; staffToken=emhhbmdodWltaW42MWVmMjEwYjJlLTM0Y2YtNDcxZS1hZDU3LTIzZTYyOWUyNzJjMw==; email=zhanghuimin61%40xdf.cn; nickname=%E5%BC%A0%E6%85%A7%E6%95%8F; jsessionid=0c7df911-f2cf-48e5-9000-2b2b779c0ac3; ac5caea5d6c36013_gr_session_id=36958070-d6b0-48f4-b5aa-8d1a46d98f5a; ac5caea5d6c36013_gr_session_id_sent_vst=36958070-d6b0-48f4-b5aa-8d1a46d98f5a; rem=on; e2e=DCB2A892933AF3582BA5A72F10828894; e2mf=acb00e0e73d4453fbd2b7b529035899f; wpsUserInfo={%22useId%22:%22408aea3f921d4edf9e14dcacf3537bf6%22%2C%22nickName%22:%22%E5%88%98%E4%B8%B9%E5%A6%AE%22%2C%22name%22:%22%E5%88%98%E4%B8%B9%E5%A6%AE%22%2C%22email%22:%22liudanni7@xdf.cn%22}',
     queryParams: {
       // 脑力与思维
       subjectId: 1574,
