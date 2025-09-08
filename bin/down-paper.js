@@ -88,22 +88,10 @@ function showHelp() {
 
 示例:
   # 基本用法（使用默认输出目录）
-  down-paper --cookie "your-cookie-string"
-
-  # 指定自定义输出目录（推荐）
-  # Linux/macOS:
-  down-paper --cookie "your-cookie-string" --output-dir "./my-papers"
-  # Windows:
-  down-paper --cookie "your-cookie-string" --output-dir ".\\my-papers"
-
-  # 指定年级和输出目录
-  down-paper --cookie "your-cookie-string" --grade "0558" --output-dir "./downloads"
-
-  # 指定所有参数
-  down-paper --cookie "your-cookie-string" --subject-id 1574 --grade "0557" --quarter 3 --use-scene "khlx" --output-dir "./downloads"
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
 
   # 使用无头模式（适合服务器环境）
-  down-paper --cookie "your-cookie-string" --headless --output-dir "./downloads"
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" --headless
 
 年级代码:
   0555 - S3          0556 - S4          0557 - 一年级
@@ -133,9 +121,16 @@ function validateOptions(options) {
 // 主函数
 async function main() {
   try {
+    const options = parseArgs();
+    
+    // 如果没有提供任何参数，直接显示帮助信息
+    if (process.argv.length === 2) {
+      showHelp();
+      return;
+    }
+    
     console.log('🚀 批量下载试卷PDF工具启动中...\n');
     
-    const options = parseArgs();
     validateOptions(options);
     
     // 构建配置对象
