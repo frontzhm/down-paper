@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p lib && cp main.js lib/index.js",
+    "build": "echo 'Build completed - using existing lib directory'",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
