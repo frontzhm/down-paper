@@ -37,6 +37,10 @@ function parseArgs() {
       case '-u':
         options.useScene = args[++i];
         break;
+      case '--keywords':
+      case '-k':
+        options.keywords = args[++i];
+        break;
       case '--output-dir':
       case '-o':
         options.outputDir = args[++i];
@@ -87,6 +91,7 @@ function showHelp() {
   -g, --grade <string>         年级 (默认: 0557)
   -q, --quarter <number>       学期 (默认: 3)
   -u, --use-scene <string>     使用场景 (默认: khlx)
+  -k, --keywords <string>      关键词搜索 (可选)
   -o, --output-dir <string>    输出目录 (默认: ./1-download)
   --headless                   使用无头模式运行浏览器 (默认，适合服务器环境)
   --no-headless                显示浏览器窗口 (用于调试)
@@ -96,6 +101,9 @@ function showHelp() {
 示例:
   # 基本用法（使用默认输出目录）
   down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
+
+  # 使用关键词搜索
+  down-paper -u "khlx" -g "0557" -q "3" -k "思维" -c "xxxx"
 
   # 使用无头模式（默认，适合服务器环境）
   down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
@@ -150,7 +158,8 @@ async function main() {
         subjectId: options.subjectId || 1574,
         useScene: options.useScene || 'khlx',
         grade: options.grade || '0557',
-        quarter: options.quarter || 3
+        quarter: options.quarter || 3,
+        keywords: options.keywords || ''
       },
       outputDir: options.outputDir || './1-download',
       headless: options.headless !== undefined ? options.headless : true
@@ -161,6 +170,9 @@ async function main() {
     console.log(`   年级: ${config.queryParams.grade}`);
     console.log(`   学期: ${config.queryParams.quarter}`);
     console.log(`   使用场景: ${config.queryParams.useScene}`);
+    if (config.queryParams.keywords) {
+      console.log(`   关键词: ${config.queryParams.keywords}`);
+    }
     console.log(`   输出目录: ${config.outputDir}`);
     console.log(`   无头模式: ${config.headless ? '是' : '否'}`);
     console.log(`   Cookie: ${config.cookie.substring(0, 50)}...`);

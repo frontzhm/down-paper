@@ -66,6 +66,9 @@ down-paper --cookie "your-cookie-string"
 # 指定参数和自定义输出目录（推荐）
 down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" 
 
+# 使用关键词搜索特定试卷
+down-paper -u "khlx" -g "0557" -q "3" -k "第4讲" -c "your-cookie-string"
+
 # 使用完整参数名
 down-paper --use-scene "nlcp" --grade "0560" --quarter "4" --cookie "your-cookie-string"
 ```
@@ -79,8 +82,34 @@ down-paper ^
   --grade "0560" ^
   --quarter 4 ^
   --use-scene "nlcp" ^
+  --keywords "数学" ^
   --output-dir ".\\downloads"
 ```
+
+#### 关键词搜索功能
+
+关键词搜索功能可以帮助您精确查找特定的试卷，提高搜索效率：
+
+**使用示例**：
+```cmd
+# 搜索包含"思维"的试卷
+down-paper -u "khlx" -g "0557" -q "3" -k "思维" -c "your-cookie"
+
+# 搜索特定讲次（如第4讲）
+down-paper -u "khlx" -g "0557" -q "3" -k "第4讲" -c "your-cookie"
+
+# 搜索特定题型
+down-paper -u "nlcp" -g "0560" -q "4" -k "应用题" -c "your-cookie"
+```
+
+**搜索效果对比**：
+- 不使用关键词：返回所有符合条件的试卷（可能很多）
+- 使用关键词：只返回包含关键词的试卷（精确匹配）
+
+**注意事项**：
+- 关键词支持中文和英文
+- 关键词会自动进行URL编码，支持特殊字符
+- 如果不提供关键词，默认为空，不影响原有功能
 
 ### 常见问题解决
 
