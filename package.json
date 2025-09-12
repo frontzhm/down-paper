@@ -42,10 +42,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/down-paper.git"
+    "url": "https://github.com/frontzhm/down-paper.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/down-paper/issues"
+    "url": "https://github.com/frontzhm/down-paper/issues"
   },
-  "homepage": "https://github.com/yourusername/down-paper#readme"
+  "homepage": "https://github.com/frontzhm/down-paper#readme"
 }

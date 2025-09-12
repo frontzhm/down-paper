@@ -1,6 +1,13 @@
 # 📚 批量下载试卷PDF工具
 
+[![npm version](https://badge.fury.io/js/down-paper.svg)](https://badge.fury.io/js/down-paper)
+[![GitHub stars](https://img.shields.io/github/stars/frontzhm/down-paper.svg)](https://github.com/frontzhm/down-paper/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/frontzhm/down-paper.svg)](https://github.com/frontzhm/down-paper/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 一个用于批量下载东方在线教育平台试卷PDF的Node.js工具，支持命令行和编程接口两种使用方式。
+
+> 📖 **项目地址**: [https://github.com/frontzhm/down-paper](https://github.com/frontzhm/down-paper)
 
 ## ✨ 功能特性
 
