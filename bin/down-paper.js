@@ -75,6 +75,9 @@ function showHelp() {
   console.log(`
 📚 批量下载试卷PDF工具
 
+💡 安装提示: 如果安装时遇到Chrome下载问题，请使用:
+   PUPPETEER_SKIP_DOWNLOAD=true npm install -g down-paper
+
 用法:
   down-paper [选项]
 

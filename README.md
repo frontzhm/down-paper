@@ -23,8 +23,38 @@
 ### 全局安装（推荐）
 
 ```bash
+# 方法一：跳过Chrome下载（推荐）
+PUPPETEER_SKIP_DOWNLOAD=true npm install -g down-paper
+
+# 方法二：使用国内镜像源
+npm install -g down-paper --registry https://registry.npmmirror.com
+
+# 方法三：如果遇到网络问题，可以设置环境变量
+export PUPPETEER_SKIP_DOWNLOAD=true
 npm install -g down-paper
 ```
+
+### ⚠️ 安装注意事项
+
+如果安装过程中遇到Chrome下载失败的错误，请使用以下方法：
+
+1. **跳过Chrome下载**（推荐）：
+   ```bash
+   PUPPETEER_SKIP_DOWNLOAD=true npm install -g down-paper
+   ```
+
+2. **使用国内镜像**：
+   ```bash
+   npm install -g down-paper --registry https://registry.npmmirror.com
+   ```
+
+3. **手动设置环境变量**：
+   ```bash
+   export PUPPETEER_SKIP_DOWNLOAD=true
+   npm install -g down-paper
+   ```
+
+**注意**：如果跳过Chrome下载，请确保系统已安装Google Chrome浏览器。
 
 ### Windows 用户安装问题解决
 

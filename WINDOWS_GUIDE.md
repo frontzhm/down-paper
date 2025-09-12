@@ -23,10 +23,23 @@
 
 #### 2. 安装 down-paper 工具
 
-**方法一：标准安装（推荐）**
+**方法一：跳过Chrome下载（推荐）**
 ```cmd
+set PUPPETEER_SKIP_DOWNLOAD=true && npm install -g down-paper
+```
+
+**方法二：使用国内镜像源**
+```cmd
+npm install -g down-paper --registry https://registry.npmmirror.com
+```
+
+**方法三：分步设置环境变量**
+```cmd
+set PUPPETEER_SKIP_DOWNLOAD=true
 npm install -g down-paper
 ```
+
+**注意**：如果跳过Chrome下载，请确保系统已安装Google Chrome浏览器。
 
 **方法二：如果遇到 Puppeteer 下载 Chromium 超时问题**
 ```cmd
