@@ -12,12 +12,14 @@
     "README.md",
     "FIELD_DICTIONARY.md",
     "WINDOWS_GUIDE.md",
-    "package.json"
+    "package.json",
+    ".npmrc"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "echo 'Build completed - using existing lib directory'",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "echo 'Skipping Chromium download as configured'"
   },
   "keywords": [
     "pdf",
