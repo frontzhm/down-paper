@@ -44,6 +44,9 @@ function parseArgs() {
       case '--headless':
         options.headless = true;
         break;
+      case '--no-headless':
+        options.headless = false;
+        break;
       case '--help':
       case '-h':
         showHelp();
@@ -82,7 +85,8 @@ function showHelp() {
   -q, --quarter <number>       学期 (默认: 3)
   -u, --use-scene <string>     使用场景 (默认: khlx)
   -o, --output-dir <string>    输出目录 (默认: ./1-download)
-  --headless                   使用无头模式运行浏览器 (适合服务器环境)
+  --headless                   使用无头模式运行浏览器 (默认，适合服务器环境)
+  --no-headless                显示浏览器窗口 (用于调试)
   -h, --help                   显示帮助信息
   -v, --version                显示版本号
 
@@ -90,8 +94,11 @@ function showHelp() {
   # 基本用法（使用默认输出目录）
   down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
 
-  # 使用无头模式（适合服务器环境）
-  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" --headless
+  # 使用无头模式（默认，适合服务器环境）
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
+  
+  # 显示浏览器窗口（用于调试）
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" --no-headless
 
 年级代码:
   0555 - S3          0556 - S4          0557 - 一年级
@@ -143,7 +150,7 @@ async function main() {
         quarter: options.quarter || 3
       },
       outputDir: options.outputDir || './1-download',
-      headless: options.headless || false
+      headless: options.headless !== undefined ? options.headless : true
     };
     
     console.log('📋 配置信息:');
