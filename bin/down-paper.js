@@ -46,13 +46,13 @@ function parseArgs() {
         options.outputDir = args[++i];
         break;
       case '--headless':
+      case '-h':
         options.headless = true;
         break;
       case '--no-headless':
         options.headless = false;
         break;
       case '--help':
-      case '-h':
         showHelp();
         process.exit(0);
         break;
@@ -92,10 +92,10 @@ function showHelp() {
   -q, --quarter <number>       学期 (默认: 3)
   -u, --use-scene <string>     使用场景 (默认: khlx)
   -k, --keywords <string>      关键词搜索 (可选)
-  -o, --output-dir <string>    输出目录 (默认: ./1-download)
-  --headless                   使用无头模式运行浏览器 (默认，适合服务器环境)
-  --no-headless                显示浏览器窗口 (用于调试)
-  -h, --help                   显示帮助信息
+  -o, --output-dir <string>    输出目录 (默认: ./download)
+  -h, --headless               使用无头模式运行浏览器 (适合服务器环境)
+  --no-headless                显示浏览器窗口 (默认，用于调试)
+  --help                       显示帮助信息
   -v, --version                显示版本号
 
 示例:
@@ -105,11 +105,11 @@ function showHelp() {
   # 使用关键词搜索
   down-paper -u "khlx" -g "0557" -q "3" -k "思维" -c "xxxx"
 
-  # 使用无头模式（默认，适合服务器环境）
-  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
+  # 使用无头模式（适合服务器环境）
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" -h
   
-  # 显示浏览器窗口（用于调试）
-  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" --no-headless
+  # 显示浏览器窗口（默认，用于调试）
+  down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
 
 年级代码:
   0555 - S3          0556 - S4          0557 - 一年级
@@ -161,8 +161,8 @@ async function main() {
         quarter: options.quarter || 3,
         keywords: options.keywords || ''
       },
-      outputDir: options.outputDir || './1-download',
-      headless: options.headless !== undefined ? options.headless : true
+      outputDir: options.outputDir || './download',
+      headless: options.headless !== undefined ? options.headless : false
     };
     
     console.log('📋 配置信息:');

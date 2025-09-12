@@ -133,7 +133,7 @@ jspm_packages/
 .env
 
 # Project specific
-1-download/
+download/
 download/
 test-output/
 cross-platform-test/

@@ -9,7 +9,7 @@ example.js
 logs/
 
 # 下载文件
-1-download/
+download/
 
 # 开发工具
 .git/

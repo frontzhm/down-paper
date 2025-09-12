@@ -81,7 +81,7 @@ function showHelp() {
   -g, --grade <string>         年级 (默认: 0557)
   -q, --quarter <number>       学期 (默认: 3)
   -u, --use-scene <string>     使用场景 (默认: khlx)
-  -o, --output-dir <string>    输出目录 (默认: ./1-download)
+  -o, --output-dir <string>    输出目录 (默认: ./download)
   --headless                   使用无头模式运行浏览器 (适合服务器环境)
   -h, --help                   显示帮助信息
   -v, --version                显示版本号
@@ -130,7 +130,7 @@ if (require.main === module) {
       grade: options.grade || '0557',
       quarter: options.quarter || 3
     },
-    outputDir: options.outputDir || './1-download',
+    outputDir: options.outputDir || './download',
     headless: options.headless || false
   };
   
