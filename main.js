@@ -28,15 +28,21 @@ function parseArgs() {
         break;
       case '--grade':
       case '-g':
-        options.grade = args[++i];
+        const gradeValue = args[++i];
+        options.grade = (gradeValue === undefined || gradeValue === '' || gradeValue.startsWith('-')) ? null : gradeValue;
+        if (gradeValue && gradeValue.startsWith('-')) i--; // 回退，因为这不是参数值
         break;
       case '--quarter':
       case '-q':
-        options.quarter = parseInt(args[++i]);
+        const quarterValue = args[++i];
+        options.quarter = (quarterValue === undefined || quarterValue === '' || quarterValue.startsWith('-')) ? null : parseInt(quarterValue);
+        if (quarterValue && quarterValue.startsWith('-')) i--; // 回退，因为这不是参数值
         break;
       case '--use-scene':
       case '-u':
-        options.useScene = args[++i];
+        const useSceneValue = args[++i];
+        options.useScene = (useSceneValue === undefined || useSceneValue === '' || useSceneValue.startsWith('-')) ? null : useSceneValue;
+        if (useSceneValue && useSceneValue.startsWith('-')) i--; // 回退，因为这不是参数值
         break;
       case '--output-dir':
       case '-o':
@@ -127,9 +133,9 @@ if (require.main === module) {
     cookie: options.cookie,
     queryParams: {
       subjectId: options.subjectId || 1574,
-      useScene: options.useScene || 'khlx',
-      grade: options.grade || '0557',
-      quarter: options.quarter || 3
+      useScene: options.useScene !== null ? (options.useScene || 'khlx') : null,
+      grade: options.grade !== null ? (options.grade || '0557') : null,
+      quarter: options.quarter !== null ? (options.quarter || 3) : null
     },
     outputDir: options.outputDir || path.resolve('./download'),
     headless: options.headless || false
