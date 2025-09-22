@@ -29,20 +29,32 @@ function parseArgs() {
       case '--grade':
       case '-g':
         const gradeValue = args[++i];
-        options.grade = (gradeValue === undefined || gradeValue === '' || gradeValue.startsWith('-')) ? null : gradeValue;
-        if (gradeValue && gradeValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        if (gradeValue === undefined || gradeValue === '' || gradeValue.startsWith('-')) {
+          options.grade = null;
+          if (gradeValue && gradeValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        } else {
+          options.grade = gradeValue;
+        }
         break;
       case '--quarter':
       case '-q':
         const quarterValue = args[++i];
-        options.quarter = (quarterValue === undefined || quarterValue === '' || quarterValue.startsWith('-')) ? null : parseInt(quarterValue);
-        if (quarterValue && quarterValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        if (quarterValue === undefined || quarterValue === '' || quarterValue.startsWith('-')) {
+          options.quarter = null;
+          if (quarterValue && quarterValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        } else {
+          options.quarter = parseInt(quarterValue);
+        }
         break;
       case '--use-scene':
       case '-u':
         const useSceneValue = args[++i];
-        options.useScene = (useSceneValue === undefined || useSceneValue === '' || useSceneValue.startsWith('-')) ? null : useSceneValue;
-        if (useSceneValue && useSceneValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        if (useSceneValue === undefined || useSceneValue === '' || useSceneValue.startsWith('-')) {
+          options.useScene = null;
+          if (useSceneValue && useSceneValue.startsWith('-')) i--; // 回退，因为这不是参数值
+        } else {
+          options.useScene = useSceneValue;
+        }
         break;
       case '--output-dir':
       case '-o':
@@ -133,9 +145,9 @@ if (require.main === module) {
     cookie: options.cookie,
     queryParams: {
       subjectId: options.subjectId || 1574,
-      useScene: options.useScene !== null ? (options.useScene || 'khlx') : null,
-      grade: options.grade !== null ? (options.grade || '0557') : null,
-      quarter: options.quarter !== null ? (options.quarter || 3) : null
+      useScene: options.useScene !== undefined ? (options.useScene !== null ? options.useScene : null) : 'khlx',
+      grade: options.grade !== undefined ? (options.grade !== null ? options.grade : null) : '0557',
+      quarter: options.quarter !== undefined ? (options.quarter !== null ? options.quarter : null) : 3
     },
     outputDir: options.outputDir || path.resolve('./download'),
     headless: options.headless || false
