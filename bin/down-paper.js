@@ -117,11 +117,20 @@ function showHelp() {
   -v, --version                显示版本号
 
 示例:
-  # 基本用法（使用默认输出目录）
+  # 基本用法（使用默认参数）
+  down-paper -c "xxxx"
+
+  # 指定部分参数（其他使用默认值）
+  down-paper -g "0560" -c "xxxx"
+
+  # 指定所有参数
   down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx"
 
   # 使用关键词搜索
   down-paper -u "khlx" -g "0557" -q "3" -k "思维" -c "xxxx"
+
+  # 参数设置为null（不传递值）
+  down-paper -g -q -u -c "xxxx"
 
   # 使用无头模式（适合服务器环境）
   down-paper -u "nlcp" -g "0560" -q "4" -c "xxxx" -h

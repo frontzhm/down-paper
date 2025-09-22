@@ -106,14 +106,17 @@ function showHelp() {
   -v, --version                显示版本号
 
 示例:
-  # 基本用法
+  # 基本用法（使用默认参数）
   node main.js --cookie "your-cookie-string"
 
-  # 指定年级
+  # 指定部分参数（其他使用默认值）
   node main.js --cookie "your-cookie-string" --grade "0556"
 
   # 指定所有参数
   node main.js --cookie "your-cookie-string" --subject-id 1574 --grade "0557" --quarter 3 --use-scene "khlx" --output-dir "./downloads"
+
+  # 参数设置为null（不传递值）
+  node main.js --cookie "your-cookie-string" --grade --quarter --use-scene
 `);
 }
 

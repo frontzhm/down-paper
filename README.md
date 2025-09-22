@@ -98,23 +98,29 @@ npm link  # 链接到全局，支持命令行使用
 #### 基本用法
 
 ```bash
-# 方式1：使用默认输出目录（在当前目录创建 download 文件夹）
+# 方式1：使用默认参数（推荐新手使用）
 down-paper --cookie "your-cookie-string"
 
-# 方式2：指定参数和自定义输出目录（推荐）
+# 方式2：指定部分参数（其他使用默认值）
+down-paper -g "0560" -c "your-cookie-string"
+
+# 方式3：指定所有参数
 # Linux/macOS:
 down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" --output-dir "./my-papers"
 
 # Windows:
 down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" --output-dir ".\\my-papers"
 
-# 方式3：使用关键词搜索特定试卷
+# 方式4：参数设置为null（不传递值）
+down-paper -g -q -u -c "your-cookie-string"
+
+# 方式5：使用关键词搜索特定试卷
 down-paper -u "khlx" -g "0557" -q "3" -k "第4讲" -c "your-cookie-string"
 
-# 方式4：使用无头模式（不显示浏览器窗口，适合服务器环境）
+# 方式6：使用无头模式（不显示浏览器窗口，适合服务器环境）
 down-paper -u "nlcp" -g "0560" -q "4" -c "your-cookie-string" -h
 
-# 方式5：使用完整参数名
+# 方式7：使用完整参数名
 down-paper --use-scene "nlcp" --grade "0560" --quarter "4" --cookie "your-cookie-string"
 ```
 
@@ -150,14 +156,36 @@ down-paper ^
 |------|------|------|--------|------|
 | `--cookie` | `-c` | ✅ | - | Cookie字符串 |
 | `--subject-id` | `-s` | ❌ | 1574 | 科目ID |
-| `--grade` | `-g` | ❌ | 0557 | 年级代码 |
-| `--quarter` | `-q` | ❌ | 3 | 学期 |
-| `--use-scene` | `-u` | ❌ | khlx | 使用场景 |
+| `--grade` | `-g` | ❌ | 0557 | 年级代码（不传递时使用默认值，传递但无值时设为null） |
+| `--quarter` | `-q` | ❌ | 3 | 学期（不传递时使用默认值，传递但无值时设为null） |
+| `--use-scene` | `-u` | ❌ | khlx | 使用场景（不传递时使用默认值，传递但无值时设为null） |
 | `--keywords` | `-k` | ❌ | - | 关键词搜索（可选） |
 | `--output-dir` | `-o` | ❌ | ./download | 输出目录 |
 | `--headless` | `-h` | ❌ | false | 使用无头模式运行浏览器（适合服务器环境） |
 | `--help` | - | ❌ | - | 显示帮助信息 |
 | `--version` | `-v` | ❌ | - | 显示版本号 |
+
+#### 参数使用方式说明
+
+对于 `-g`、`-q`、`-u` 参数，支持三种使用方式：
+
+1. **不传递参数**：使用默认值
+   ```bash
+   down-paper -c "your-cookie"
+   # grade: 0557, quarter: 3, useScene: khlx (使用默认值)
+   ```
+
+2. **传递参数但没有值**：设置为 null
+   ```bash
+   down-paper -g -q -u -c "your-cookie"
+   # grade: null, quarter: null, useScene: null
+   ```
+
+3. **传递参数且有值**：使用指定值
+   ```bash
+   down-paper -g "0557" -q "3" -u "khlx" -c "your-cookie"
+   # grade: 0557, quarter: 3, useScene: khlx
+   ```
 
 #### 年级代码对照表
 
