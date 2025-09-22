@@ -161,7 +161,7 @@ async function main() {
         quarter: options.quarter || 3,
         keywords: options.keywords || ''
       },
-      outputDir: options.outputDir || './download',
+      outputDir: options.outputDir || path.resolve('./download'),
       headless: options.headless !== undefined ? options.headless : false
     };
     

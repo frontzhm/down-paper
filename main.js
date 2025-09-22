@@ -7,6 +7,7 @@
  */
 
 const { runBatchPDFGeneration } = require('./lib/batchProcessor');
+const path = require('path');
 
 // 解析命令行参数
 function parseArgs() {
@@ -114,7 +115,7 @@ if (require.main === module) {
   // 如果没有提供任何参数，直接显示帮助信息
   if (process.argv.length === 2) {
     showHelp();
-    return;
+    process.exit(0);
   }
   
   console.log('🚀 批量下载试卷PDF工具');
@@ -130,7 +131,7 @@ if (require.main === module) {
       grade: options.grade || '0557',
       quarter: options.quarter || 3
     },
-    outputDir: options.outputDir || './download',
+    outputDir: options.outputDir || path.resolve('./download'),
     headless: options.headless || false
   };
   
