@@ -183,9 +183,9 @@ async function main() {
       cookie: options.cookie,
       queryParams: {
         subjectId: options.subjectId || 1574,
-        useScene: options.useScene !== undefined ? (options.useScene !== null ? options.useScene : null) : 'khlx',
-        grade: options.grade !== undefined ? (options.grade !== null ? options.grade : null) : '0557',
-        quarter: options.quarter !== undefined ? (options.quarter !== null ? options.quarter : null) : 3,
+        useScene: options.useScene !== undefined ? (options.useScene !== null ? options.useScene : null) : null,
+        grade: options.grade !== undefined ? (options.grade !== null ? options.grade : null) : null,
+        quarter: options.quarter !== undefined ? (options.quarter !== null ? options.quarter : null) : null,
         keywords: options.keywords || ''
       },
       outputDir: options.outputDir || path.resolve('./download'),
