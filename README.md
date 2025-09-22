@@ -156,9 +156,9 @@ down-paper ^
 |------|------|------|--------|------|
 | `--cookie` | `-c` | ✅ | - | Cookie字符串 |
 | `--subject-id` | `-s` | ❌ | 1574 | 科目ID |
-| `--grade` | `-g` | ❌ | 0557 | 年级代码（不传递时使用默认值，传递但无值时设为null） |
-| `--quarter` | `-q` | ❌ | 3 | 学期（不传递时使用默认值，传递但无值时设为null） |
-| `--use-scene` | `-u` | ❌ | khlx | 使用场景（不传递时使用默认值，传递但无值时设为null） |
+| `--grade` | `-g` | ❌ | null | 年级代码（不传递时使用默认值，传递但无值时设为null） |
+| `--quarter` | `-q` | ❌ | null | 学期（不传递时使用默认值，传递但无值时设为null） |
+| `--use-scene` | `-u` | ❌ | null | 使用场景（不传递时使用默认值，传递但无值时设为null） |
 | `--keywords` | `-k` | ❌ | - | 关键词搜索（可选） |
 | `--output-dir` | `-o` | ❌ | ./download | 输出目录 |
 | `--headless` | `-h` | ❌ | false | 使用无头模式运行浏览器（适合服务器环境） |
@@ -172,7 +172,7 @@ down-paper ^
 1. **不传递参数**：使用默认值
    ```bash
    down-paper -c "your-cookie"
-   # grade: 0557, quarter: 3, useScene: khlx (使用默认值)
+   # grade: null, quarter: null, useScene: null (使用默认值)
    ```
 
 2. **传递参数但没有值**：设置为 null

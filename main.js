@@ -97,9 +97,9 @@ function showHelp() {
 选项:
   -c, --cookie <string>        Cookie字符串 (必需)
   -s, --subject-id <number>    科目ID (默认: 1574)
-  -g, --grade <string>         年级 (默认: 0557)
-  -q, --quarter <number>       学期 (默认: 3)
-  -u, --use-scene <string>     使用场景 (默认: khlx)
+  -g, --grade <string>         年级 (默认: null)
+  -q, --quarter <number>       学期 (默认: null)
+  -u, --use-scene <string>     使用场景 (默认: null)
   -o, --output-dir <string>    输出目录 (默认: ./download)
   --headless                   使用无头模式运行浏览器 (适合服务器环境)
   -h, --help                   显示帮助信息
